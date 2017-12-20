@@ -1,9 +1,45 @@
 <nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
     <div class="list-group">
         <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
-            <i class="fa fa-fw fa-dashboard"></i>&nbsp;{{ 'Dashboard'}}
+            <i class="fa fa-fw fa-dashboard"></i>&nbsp;{{ 'Trang chủ'}}
         </a>
-        <a [routerLink]="['/charts']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('pages1')">
+                <span><i class="fa fa-plus"></i>&nbsp; {{ 'Quản lý' }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu1 === 'pages1'">
+                <ul class="submenu">
+                    <li>
+                        <a routerLink="/resource"><span>{{ 'Nguyên liệu' }}</span></a>
+                    </li>
+                    <li>
+                        <a routerLink="/imexport"><span>{{ 'Nhập xuất' }}</span></a>
+                    </li>
+                    <li>
+                        <a routerLink="/land"><span>{{ 'Đất trồng' }}</span></a>
+                    </li>
+                    <li>
+                        <a routerLink="/document"><span>{{ 'Tài liệu' }}</span></a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('pages2')">
+                <span><i class="fa fa-plus"></i>&nbsp; {{ 'Nhân sự'}}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu2 === 'pages2'">
+                <ul class="submenu">
+                    <li>
+                        <a routerLink="/employee"><span>{{ 'Nhân viên' }}</span></a>
+                    </li>
+                    <li>
+                        <a routerLink="/farmer"><span>{{ 'Nông dân' }}</span></a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <!-- <a [routerLink]="['/charts']" [routerLinkActive]="['router-link-active']" class="list-group-item">
             <i class="fa fa-fw fa-bar-chart-o"></i>&nbsp;{{ 'Charts'}}
         </a>
         <a [routerLink]="['/tables']" [routerLinkActive]="['router-link-active']" class="list-group-item">
@@ -44,6 +80,6 @@
         </a>
         <a class="list-group-item more-themes" href="http://www.strapui.com/" >
             {{ 'More Theme' }}
-        </a>
+        </a> -->
     </div>
 </nav>

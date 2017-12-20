@@ -9,13 +9,13 @@ const routes: Routes = [
         children: [
             { path: '', redirectTo: 'dashboard' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-            { path: 'charts', loadChildren: './charts/charts.module#ChartsModule' },
-            { path: 'tables', loadChildren: './tables/tables.module#TablesModule' },
-            { path: 'forms', loadChildren: './form/form.module#FormModule' },
-            { path: 'bs-element', loadChildren: './bs-element/bs-element.module#BsElementModule' },
-            { path: 'grid', loadChildren: './grid/grid.module#GridModule' },
-            { path: 'components', loadChildren: './bs-component/bs-component.module#BsComponentModule' },
-            { path: 'blank-page', loadChildren: './blank-page/blank-page.module#BlankPageModule' }
+            { path: 'resource', loadChildren: './resource/resource.module#ResourceModule' },
+            { path: 'imexport', loadChildren: './imexport/imexport.module#ImexportModule' },
+            { path: 'land', loadChildren: './land/land.module#LandModule' },
+            { path: 'document', loadChildren: './document/document.module#DocumentModule' },
+            { path: 'employee', loadChildren: './employee/employee.module#EmployeeModule' },
+            { path: 'farmer', loadChildren: './farmer/farmer.module#FarmerModule' }
+            
         ]
     }
 ];
