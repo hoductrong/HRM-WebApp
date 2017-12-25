@@ -1,10 +1,67 @@
 <div [@routerTransition]>
     <h2 class="text-muted">Nông dân</h2>
     <hr>
-    
+
     <div class="row">
         <div class="col-xl-2">
-            <button type="button" class="btn btn-secondary btn-block">Thêm </button>
+            <button type="button" class="btn btn-secondary btn-block" (click)="open(content)">Thêm </button>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Xuất nguyên liệu</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Họ Tên nông dân</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <input type="text" class="form-control" id="fullname">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Ngày sinh</p>
+                        </div>
+                        <div class="col-xl-6">
+                            
+                                    <div class="input-group ">
+                                        <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker #e="ngbDatepicker">
+                                        <button class="input-group-addon" (click)="e.toggle()" type="button">
+                                            <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
+                                        </button>
+                                    </div>
+                             
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Số lượng</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <input type="text" class="form-control" id="amount">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Nông dân nhận</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <select class="custom-select">
+                                <option selected>Open this select menu</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary " (click)="c('Close click')">Xác nhận</button>
+                </div>
+            </ng-template>
         </div>
         <div class="col-xl-4"></div>
         <div class="col-xl-6">

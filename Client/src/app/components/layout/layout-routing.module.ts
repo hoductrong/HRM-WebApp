@@ -14,7 +14,8 @@ const routes: Routes = [
             { path: 'land', loadChildren: './land/land.module#LandModule' },
             { path: 'document', loadChildren: './document/document.module#DocumentModule' },
             { path: 'employee', loadChildren: './employee/employee.module#EmployeeModule' },
-            { path: 'farmer', loadChildren: './farmer/farmer.module#FarmerModule' }
+            { path: 'farmer', loadChildren: './farmer/farmer.module#FarmerModule' },
+            { path: 'accountmanager', loadChildren: './account/account.module#AccountModule' }
             
         ]
     }
