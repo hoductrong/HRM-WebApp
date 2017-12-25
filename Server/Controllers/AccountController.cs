@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using QuanLyNongTrai.Helpers;
 using QuanLyNongTrai.Model;
 using QuanLyNongTrai.Model.Entity;
 using QuanLyNongTrai.UI.Entity;
@@ -26,7 +28,6 @@ namespace QuanLyNongTrai
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
-
         private readonly IConfiguration _configuration;
 
         public AccountController(
@@ -47,39 +48,114 @@ namespace QuanLyNongTrai
         public async Task<object> Login([FromBody]UserLoginModel model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
-
+            
+            ResponseMessageModel message;
             if (result.Succeeded)
             {
                 var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.UserName);
+                //require change password
+                if (appUser.PasswordChanged == false)
+                {
+                    message = new ResponseMessageModel
+                    {
+                        Code = MessageCode.ERROR,
+                        ErrorMessage = "You must change password for login first time"
+                    };
+                    return StatusCode(StatusCodes.Status403Forbidden,message);
+                }
                 var token = new TokenModel
                 {
                     Token = (string)(await GenerateJwtToken(model.UserName, appUser))
                 };
                 return Json(token);
             }
+            message = new ResponseMessageModel{
+                Code = MessageCode.ERROR,
+                ErrorMessage = "UserName and Password don't right"
+            };
+            return StatusCode(StatusCodes.Status403Forbidden,message);
+            
+        }
 
-            throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
+        [Route("")]
+        [HttpPut]
+        public async Task<object> ChangePassword([FromBody]UserChangePasswordModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException();
+
+            ResponseMessageModel message;
+
+            if (model.Password != model.RePassword)
+            {
+                message = new ResponseMessageModel
+                {
+                    Code = MessageCode.ERROR,
+                    ErrorMessage = "Password don't match"
+                };
+                return message;
+            }
+
+            ApplicationUser user = await _userManager.FindByNameAsync(model.UserName);
+            if(user == null){
+                message = new ResponseMessageModel
+                {
+                    Code = MessageCode.ERROR,
+                    ErrorMessage = "User not found"
+                };
+                return message;
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user,model.OldPassword, model.Password);
+            if(result.Succeeded){
+                user.PasswordChanged = true;
+                await _userManager.UpdateAsync(user);
+                var token = new TokenModel
+                {
+                    Token = (string)(await GenerateJwtToken(model.UserName, user))
+                };
+                return Json(token);
+            }
+            
+            message = new ResponseMessageModel{
+                Code = MessageCode.ERROR,
+                ErrorMessage = "CHANGE_PASSWORD_NOT_SUCCESS"
+            };
+            return message;
         }
 
         [HttpPost]
         [Authorize(Roles = "manager")]
         public async Task<object> Register([FromBody]UserRegisterModel userRegister)
         {
+            if (userRegister.Password == null || userRegister.Password.Length <= 0)
+            {
+                userRegister.Password = PasswordGenerator.GenerateRandomPassword();
+                userRegister.RePassword = userRegister.Password;
+            }
+
             if (userRegister.Password != userRegister.RePassword)
             {
                 throw new ValidationException("Mật khẩu không khớp");
             }
             var user = new ApplicationUser
             {
+                Id = Guid.NewGuid(),
                 UserName = userRegister.UserName,
-                PersonalId = userRegister.PersonalId
+                PersonalId = userRegister.PersonalId,
+                PasswordChanged = false
             };
 
             IdentityResult result = await _userManager.CreateAsync(user, userRegister.Password);
 
             if (result.Succeeded)
             {
-                return NoContent();
+                return new
+                {
+                    UserName = user.UserName,
+                    Id = user.Id,
+                    Password = userRegister.Password
+                };
             }
             throw new ApplicationException("UNKNOWN_ERROR");
         }
@@ -164,10 +240,11 @@ namespace QuanLyNongTrai
             };
 
             var roles = await _userManager.GetRolesAsync(user);
-            foreach(string role in roles){
-                claims.Add(new Claim(ClaimTypes.Role,role));
+            foreach (string role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
