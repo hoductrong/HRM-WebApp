@@ -1,0 +1,20 @@
+<div [@routerTransition]>
+    <h2 class="text-muted">Trang chủ <small>Overview</small></h2>
+    
+    <hr>
+    <div class="row">
+        <div class="col-xl-3 col-lg-6">
+            <app-stat [bgClass]="'primary'"  [label]="'Quản lý nguyên liệu'" ></app-stat>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+            <app-stat [bgClass]="'warning'"  [label]="'Nhập xuất'" ></app-stat>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+            <app-stat [bgClass]="'success'"  [label]="'Quản lý đất trồng'" ></app-stat>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+            <app-stat [bgClass]="'danger'"   [label]="'Tài liệu'"></app-stat>
+        </div>
+    </div>
+    <hr />   
+</div>
