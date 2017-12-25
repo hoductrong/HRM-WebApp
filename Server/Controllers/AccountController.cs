@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using QuanLyNongTrai.Model.Entity;
+using QuanLyNongTrai.UI.Entity;
 
 namespace QuanLyNongTrai
 {
@@ -32,39 +34,64 @@ namespace QuanLyNongTrai
             _configuration = configuration;
         }
 
-        [HttpPost]
         [Route("token")]
-        public async Task<object> Login(string username, string password)
+        [HttpPost]
+        public async Task<object> Login([FromBody]UserLoginModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
 
             if (result.Succeeded)
             {
-                var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == username);
-                return await GenerateJwtToken(username, appUser);
+                var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == model.UserName);
+                return await GenerateJwtToken(model.UserName, appUser);
             }
 
             throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
         }
 
         [HttpPost]
-        [Authorize]
-        public async Task<object> Register(string username, string password, string repassword)
+        [Authorize(Roles = "manager")]
+        public async Task<object> Register([FromBody]UserRegisterModel userRegister)
         {
+            if (userRegister.Password != userRegister.RePassword)
+            {
+                throw new ValidationException("Mật khẩu không khớp");
+            }
             var user = new ApplicationUser
             {
-                UserName = username, 
-                PersonalId = Guid.Parse("d9128c6b-5354-40b2-998e-5db6d878a88d")
+                UserName = userRegister.UserName,
+                PersonalId = userRegister.PersonalId
             };
 
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, userRegister.Password);
 
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return await GenerateJwtToken(username, user);
+                return Ok(await GenerateJwtToken(userRegister.UserName, user));
             }
             throw new ApplicationException("UNKNOWN_ERROR");
+        }
+
+        [Route("userId")]
+        [HttpDelete]
+        [Authorize(Roles = "manager")]
+        public async Task<object> RemoveUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    throw new ApplicationException();
+                }
+            }
+            throw new KeyNotFoundException("Không tìm thấy user với Id được cung cấp");
         }
 
         private async Task<object> GenerateJwtToken(string username, ApplicationUser user)
