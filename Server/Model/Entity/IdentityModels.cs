@@ -7,22 +7,26 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace QuanLyNongTrai.Model.Entity {
-    public class ApplicationUser : IdentityUser<Guid>{
+namespace QuanLyNongTrai.Model.Entity
+{
+    public class ApplicationUser : IdentityUser<Guid>
+    {
+        public bool PasswordChanged { get; set; }
         //foreign key id
-        public Guid PersonalId {get;set;}
+        public Guid PersonalId { get; set; }
         //relationship
-        public Personal Personal {get;set;}
+        public Personal Personal { get; set; }
     }
 
-    public class ApplicationRole : IdentityRole<Guid> {
-        
+    public class ApplicationRole : IdentityRole<Guid>
+    {
+
     }
 
     public class ApplicationUserStore
         : UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>
     {
-        public ApplicationUserStore(ApplicationDbContext context, IdentityErrorDescriber describer = null) 
+        public ApplicationUserStore(ApplicationDbContext context, IdentityErrorDescriber describer = null)
             : base(context, describer)
         {
         }

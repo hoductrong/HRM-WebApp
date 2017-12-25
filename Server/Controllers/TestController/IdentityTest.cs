@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace QuanLyNongTrai
+namespace QuanLyNongTrai.Test
 {
     [Route("api/test/identity")]
     [Authorize]
