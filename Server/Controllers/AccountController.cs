@@ -206,6 +206,7 @@ namespace QuanLyNongTrai
                     {
                         Id = Guid.Parse("9c547812-b4dc-4efd-8d17-a12b639adaa5"),
                         UserName = "dinhhongphi",
+                        PasswordChanged = true,
                         PersonalId = Guid.Parse("1a29080a-2644-4e60-8995-3b3865d73b27")
                     };
                     result = await _userManager.CreateAsync(user, "Dinhhongphi@017");
