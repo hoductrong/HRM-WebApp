@@ -14,8 +14,8 @@ export class TokenService {
 
   setToken(tk:ResponseMessage){
     this.token = <Token>tk.Data;
-      console.log(this.token.Token);
-      localStorage.setItem("token",this.token.Token);
+      console.log(this.token.token);
+      localStorage.setItem("token",this.token.token);
   }
   checkToken(){
     if(localStorage.getItem("token")) return true;

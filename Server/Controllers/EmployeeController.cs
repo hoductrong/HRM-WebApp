@@ -53,7 +53,10 @@ namespace QuanLyNongTrai
                 //parse response
                 model.EmployeeId = employee.Id;
                 model.PersonalId = employee.Personal.Id;
-                return model;
+                return new ResponseMessageModel{
+                    Code = MessageCode.SUCCESS,
+                    Data = model
+                };
             }catch(Exception ex){
                 message = new ResponseMessageModel{
                     Code = MessageCode.SQL_ACTION_ERROR,
@@ -67,10 +70,15 @@ namespace QuanLyNongTrai
         [HttpGet]
         [Authorize(Roles = "manager")]
         public object GetAllEmployee(){
+            ResponseMessageModel message;
             try{
-                return _employeeService.GetAll();
+                message = new ResponseMessageModel {
+                    Code = MessageCode.SUCCESS,
+                    Data = _employeeService.GetAll()
+                };
+                return message;
             }catch(Exception ex){
-                ResponseMessageModel message = new ResponseMessageModel{
+                message = new ResponseMessageModel{
                     Code = MessageCode.APPLICATION_ERROR,
                     ErrorMessage = ex.Message
                 };

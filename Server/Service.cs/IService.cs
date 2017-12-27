@@ -14,13 +14,13 @@ namespace QuanLyNongTrai.Service{
         /// Add new entity
         /// </summary>
         /// <param name="entity"></param>
-        void Add(TEntity entity);
+        ChangeDataResult Add(TEntity entity);
         
         /// <summary>
         /// Update entity
         /// </summary>
         /// <param name="entity"></param>
-        void Update(TEntity entity);
+        ChangeDataResult Update(TEntity entity);
 
         /// <summary>
         /// Find a entity with Id
@@ -33,13 +33,13 @@ namespace QuanLyNongTrai.Service{
         /// Delete entity
         /// </summary>
         /// <param name="entity"></param>
-        void Delete(TEntity entity);
+        ChangeDataResult Delete(TEntity entity);
 
         /// <summary>
         /// Check business logic
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        bool Validate(TEntity entity);
+        ChangeDataResult Validate(TEntity entity);
     }
 }

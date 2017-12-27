@@ -1,9 +1,9 @@
 export class Token {
-    public Token:string;
-    get token(){
-        return this.Token;
+    public token:string;
+    get Token(){
+        return this.token;
     }
-    set token(tk:string){
-        this.Token = tk;
+    set Token(tk:string){
+        this.token = tk;
     }
 }

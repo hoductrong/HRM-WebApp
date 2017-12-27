@@ -2,6 +2,7 @@ using System;
 using DependencyInjectionSample.Interfaces;
 using QuanLyNongTrai.Model.Entity;
 using QuanLyNongTrai.Repository;
+using QuanLyNongTrai.UI.Entity;
 
 namespace QuanLyNongTrai.Service
 {
@@ -20,21 +21,38 @@ namespace QuanLyNongTrai.Service
             _personalService = personalService;
         }
 
-        public override void Add(Employee entity)
+        public override ChangeDataResult Add(Employee entity)
         {
-            if (entity == null)
-                throw new ArgumentNullException();
+            ChangeDataResult result;
             _unitOfWork.BeginTransaction();
             try
             {
+                if (entity == null)
+                    throw new ArgumentNullException();
                 Personal personal = entity.Personal;
-                _personalService.Add(personal);
+                result = _personalService.Add(personal);
+                if (!result.Succeeded)
+                {
+                    return result;
+                }
+                result = Validate(entity);
+                if (!result.Succeeded)
+                {
+                    return result;
+                }
                 entity.Id = Guid.NewGuid();
                 _employeeRepository.Add(entity);
                 _unitOfWork.SaveChanges();
-            }catch(Exception ex){
+                return result;
+            }
+            catch (Exception ex)
+            {
                 _unitOfWork.RollBack();
-                throw ex;
+                return ChangeDataResult.Fails(new ChangeDataError
+                    {
+                        Code = MessageCode.SQL_ACTION_ERROR,
+                        Description = ex.Message
+                    });
             }
         }
     }

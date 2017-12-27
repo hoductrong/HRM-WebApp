@@ -59,7 +59,7 @@ namespace QuanLyNongTrai
                     message = new ResponseMessageModel
                     {
                         Code = MessageCode.ERROR,
-                        ErrorMessage = "You must change password for login first time"
+                        ErrorMessage = "Bạn phải thay đổi mật khẩu cho lần đầu đăng nhập"
                     };
                     return StatusCode(StatusCodes.Status403Forbidden,message);
                 }
@@ -67,11 +67,14 @@ namespace QuanLyNongTrai
                 {
                     Token = (string)(await GenerateJwtToken(model.UserName, appUser))
                 };
-                return Json(token);
+                return new ResponseMessageModel {
+                    Code = MessageCode.SUCCESS,
+                    Data = token
+                };
             }
             message = new ResponseMessageModel{
                 Code = MessageCode.ERROR,
-                ErrorMessage = "Tên đăng nhập và mật khẩu không đúng."
+                ErrorMessage = "Tài khoản hoặc mật khẩu không chính xác"
             };
             return StatusCode(StatusCodes.Status403Forbidden,message);
             
@@ -136,6 +139,7 @@ namespace QuanLyNongTrai
         [Authorize(Roles = "manager")]
         public async Task<object> Register([FromBody]UserRegisterModel userRegister)
         {
+            ResponseMessageModel message;
             if (userRegister.Password == null || userRegister.Password.Length <= 0)
             {
                 userRegister.Password = PasswordGenerator.GenerateRandomPassword();
@@ -144,7 +148,11 @@ namespace QuanLyNongTrai
 
             if (userRegister.Password != userRegister.RePassword)
             {
-                throw new ValidationException("Mật khẩu không khớp");
+                message = new ResponseMessageModel{
+                    Code = MessageCode.DATA_VALIDATE_ERROR,
+                    ErrorMessage = "Mật khẩu không khớp nhau"
+                };
+                return message;
             }
             var user = new ApplicationUser
             {
@@ -158,14 +166,24 @@ namespace QuanLyNongTrai
 
             if (result.Succeeded)
             {
-                return new
+                var userInfo = new
                 {
                     UserName = user.UserName,
                     Id = user.Id,
                     Password = userRegister.Password
                 };
+                message = new ResponseMessageModel{
+                    Code = MessageCode.SUCCESS,
+                    Data = userInfo
+                };
+                return message;
             }
-            throw new ApplicationException("UNKNOWN_ERROR");
+            //errors occur
+            message = new ResponseMessageModel{
+                Code = MessageCode.SQL_ACTION_ERROR,
+                ErrorMessage = result.Errors.ToString()
+            };
+            return message;
         }
 
         [Route("{userId}")]
@@ -173,6 +191,7 @@ namespace QuanLyNongTrai
         [Authorize(Roles = "manager")]
         public async Task<object> RemoveUser(string userId)
         {
+            ResponseMessageModel message;
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
@@ -183,10 +202,21 @@ namespace QuanLyNongTrai
                 }
                 else
                 {
-                    throw new ApplicationException();
+                    string errors = "";
+                    foreach(var e in result.Errors){
+                        errors += e.Description + "\r\n";
+                    }
+                    message = new ResponseMessageModel{
+                        Code = MessageCode.SQL_ACTION_ERROR,
+                        ErrorMessage = errors
+                    };
+                    return message;
                 }
             }
-            throw new KeyNotFoundException("Không tìm thấy user với Id được cung cấp");
+            message = new ResponseMessageModel{
+                Code = MessageCode.OBJECT_NOT_FOUND
+            };
+            return message;
         }
 #if DEBUG
         [Route("generate")]
