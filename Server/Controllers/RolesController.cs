@@ -6,6 +6,7 @@ using QuanLyNongTrai.Model.Entity;
 using System;
 using QuanLyNongTrai.UI.Entity;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace QuanLyNongTrai
 {
@@ -17,6 +18,18 @@ namespace QuanLyNongTrai
         public RolesController(ApplicationRoleManager roleManager)
         {
             _roleManager = roleManager;
+        }
+
+        [Route("")]
+        [HttpGet]
+        [Authorize(Roles = "manager")]
+        public async Task<object> GetAllRole(){
+            ResponseMessageModel message;
+            message = new ResponseMessageModel{
+                Code = MessageCode.SUCCESS,
+                Data = _roleManager.Roles.ToList()
+            };
+            return message;
         }
 
         [HttpPost]
