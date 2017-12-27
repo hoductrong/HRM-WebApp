@@ -1,5 +1,5 @@
 export class Token {
-    Token:string;
+    public Token:string;
     get token(){
         return this.Token;
     }

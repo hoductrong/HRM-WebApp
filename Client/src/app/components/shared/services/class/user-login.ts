@@ -1,6 +1,6 @@
 export class UserLogin {
-    Username : string;
-    Password : string;
+    public Username : string;
+    public Password : string;
     get username(){
         return this.Username;
     }

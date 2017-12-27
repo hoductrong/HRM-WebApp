@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Token } from './class/token'
+import { Token, ResponseMessage } from './class'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserLogin } from './class/user-login';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
@@ -12,8 +12,10 @@ export class TokenService {
   token:Token = new Token() ;
   userLogin = new UserLogin();
 
-  setToken(tk:Token){
-      localStorage.setItem("token",tk.token);
+  setToken(tk:ResponseMessage){
+    this.token = <Token>tk.Data;
+      console.log(this.token.Token);
+      localStorage.setItem("token",this.token.Token);
   }
   checkToken(){
     if(localStorage.getItem("token")) return true;
@@ -24,7 +26,7 @@ export class TokenService {
   }
   getToken(user:UserLogin){
     
-    this.http.post<Token>(this.urlToken,user).subscribe(
+    this.http.post<ResponseMessage>(this.urlToken,user).subscribe(
       data => {
         this.setToken(data);
         this.router.navigate(['/dashboard']);
