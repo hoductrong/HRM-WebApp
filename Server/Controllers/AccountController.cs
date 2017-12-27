@@ -191,6 +191,7 @@ namespace QuanLyNongTrai
         [Authorize(Roles = "manager")]
         public async Task<object> RemoveUser(string userId)
         {
+            ResponseMessageModel message;
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
@@ -201,10 +202,21 @@ namespace QuanLyNongTrai
                 }
                 else
                 {
-                    throw new ApplicationException();
+                    string errors = "";
+                    foreach(var e in result.Errors){
+                        errors += e.Description + "\r\n";
+                    }
+                    message = new ResponseMessageModel{
+                        Code = MessageCode.SQL_ACTION_ERROR,
+                        ErrorMessage = errors
+                    };
+                    return message;
                 }
             }
-            throw new KeyNotFoundException("Không tìm thấy user với Id được cung cấp");
+            message = new ResponseMessageModel{
+                Code = MessageCode.OBJECT_NOT_FOUND
+            };
+            return message;
         }
 #if DEBUG
         [Route("generate")]
