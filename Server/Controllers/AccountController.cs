@@ -198,7 +198,10 @@ namespace QuanLyNongTrai
                 var result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
-                    return NoContent();
+                    message = new ResponseMessageModel{
+                        Code = MessageCode.SUCCESS
+                    };
+                    return message;
                 }
                 else
                 {
