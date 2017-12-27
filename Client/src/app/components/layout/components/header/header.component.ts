@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { TokenService } from '../../../shared/services/token.service'
 
 @Component({
     selector: 'app-header',
@@ -9,7 +10,7 @@ import { Router, NavigationEnd } from '@angular/router';
 export class HeaderComponent implements OnInit {
     pushRightClass: string = 'push-right';
 
-    constructor(public router: Router) {
+    constructor(public router: Router,public tkService: TokenService) {
 
         this.router.events.subscribe(val => {
             if (
@@ -40,7 +41,7 @@ export class HeaderComponent implements OnInit {
     }
 
     onLoggedout() {
-        localStorage.removeItem('isLoggedin');
+        this.tkService.removeToken();
     }
 
     

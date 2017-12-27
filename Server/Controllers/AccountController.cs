@@ -71,7 +71,7 @@ namespace QuanLyNongTrai
             }
             message = new ResponseMessageModel{
                 Code = MessageCode.ERROR,
-                ErrorMessage = "UserName and Password don't right"
+                ErrorMessage = "Tên đăng nhập và mật khẩu không đúng."
             };
             return StatusCode(StatusCodes.Status403Forbidden,message);
             
