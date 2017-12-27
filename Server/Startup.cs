@@ -19,10 +19,12 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DependencyInjectionSample.Interfaces;
+using QuanLyNongTrai.Helpers;
 
 namespace QuanLyNongTrai
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -70,6 +72,8 @@ namespace QuanLyNongTrai
                     };
                 });
 
+        
+            ConfigureDependencyInjection(services);
 
             services.AddMvc();
         }

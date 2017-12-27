@@ -81,17 +81,22 @@ namespace QuanLyNongTrai
         [HttpPut]
         public async Task<object> ChangePassword([FromBody]UserChangePasswordModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException();
-
             ResponseMessageModel message;
+            if (model == null)
+            {
+                message = new ResponseMessageModel{
+                    Code = MessageCode.PARAMETER_NULL
+                };
+                return message;
+            }
+
 
             if (model.Password != model.RePassword)
             {
                 message = new ResponseMessageModel
                 {
-                    Code = MessageCode.ERROR,
-                    ErrorMessage = "Password don't match"
+                    Code = MessageCode.DATA_VALIDATE_ERROR,
+                    ErrorMessage = "Mật khẩu không khớp nhau"
                 };
                 return message;
             }
@@ -100,8 +105,8 @@ namespace QuanLyNongTrai
             if(user == null){
                 message = new ResponseMessageModel
                 {
-                    Code = MessageCode.ERROR,
-                    ErrorMessage = "User not found"
+                    Code = MessageCode.OBJECT_NOT_FOUND,
+                    ErrorMessage = "Không tìm thấy user"
                 };
                 return message;
             }
@@ -114,12 +119,15 @@ namespace QuanLyNongTrai
                 {
                     Token = (string)(await GenerateJwtToken(model.UserName, user))
                 };
-                return Json(token);
+                return new ResponseMessageModel {
+                    Code = MessageCode.SUCCESS,
+                    Data = token
+                };
             }
             
             message = new ResponseMessageModel{
-                Code = MessageCode.ERROR,
-                ErrorMessage = "CHANGE_PASSWORD_NOT_SUCCESS"
+                Code = MessageCode.SQL_ACTION_ERROR,
+                ErrorMessage = "Có lỗi xảy ra, Không thể thay đổi mật khẩu"
             };
             return message;
         }
@@ -206,6 +214,7 @@ namespace QuanLyNongTrai
                     {
                         Id = Guid.Parse("9c547812-b4dc-4efd-8d17-a12b639adaa5"),
                         UserName = "dinhhongphi",
+                        PasswordChanged = true,
                         PersonalId = Guid.Parse("1a29080a-2644-4e60-8995-3b3865d73b27")
                     };
                     result = await _userManager.CreateAsync(user, "Dinhhongphi@017");
