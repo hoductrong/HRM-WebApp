@@ -86,7 +86,7 @@ namespace QuanLyNongTrai
                 message = new ResponseMessageModel
                 {
                     Code = MessageCode.SUCCESS,
-                    Data = _employeeService.GetAll()
+                    Data = _employeeService.GetAllEmployeeDetail()
                 };
                 return message;
             }
