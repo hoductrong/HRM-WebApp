@@ -30,6 +30,14 @@
                         </div>
                     </div>
                     <div class="row">
+                            <div class="col-xl-6">
+                                <p>Lương</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <input type="text" [(ngModel)]="emp.salary" class="form-control" id="salary">
+                            </div>
+                        </div>
+                    <div class="row">
                         <div class="col-xl-6">
                             <p>Giới tính</p>
                         </div>
@@ -47,7 +55,7 @@
                         <div class="col-xl-6">
 
                             <div class="input-group ">
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="emp.birthday" ngbDatepicker #e="ngbDatepicker">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker">
                                 <button class="input-group-addon" (click)="e.toggle()" type="button">
                                     <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
                                 </button>
@@ -70,7 +78,7 @@
                         <div class="col-xl-6">
 
                             <div class="input-group ">
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="emp.startWorkTime" ngbDatepicker #f="ngbDatepicker">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time2" ngbDatepicker #f="ngbDatepicker">
                                 <button class="input-group-addon" (click)="f.toggle()" type="button">
                                     <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
                                 </button>
@@ -88,7 +96,7 @@
             <div class="col-xl-4"></div>
             <div class="col-xl-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm tên nhân viên..." aria-label="Tìm kiếm tên nhân viên...">
+                    <input type="text" class="form-control" [(ngModel)]="filter.personalId" placeholder="Tìm kiếm tên nhân viên..." aria-label="Tìm kiếm tên nhân viên...">
                     <span class="input-group-btn">
                         <button class="btn btn-secondary" type="button">Tìm kiếm!</button>
                     </span>
@@ -102,20 +110,20 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Username</th>
-                            <th></th>
-                            <th></th>
+                            <th>Họ Tên</th>
+                            <th>Giới tính</th>
+                            <th>Ngày vào làm</th>
+                            <th>Mức lương</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                        <tr *ngFor="let employee of empCollection | filterBy: filter | 
+                        paginate: { itemsPerPage: 5,
+                        currentPage: p}">
+                            <th>{{employee.personalId}}}</th>
+                            <td>{{employee.id}}</td>
+                            <td>{{employee.startWorkTime}}</td>
+                            <td>{{employee.salary}}</td>
                             <td>
                                 <a href="">Xóa</a>
                             </td>
@@ -123,44 +131,17 @@
                                 <a href="">Sửa</a>
                             </td>
                         </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@TwBootstrap</td>
-                            <td>
-                                <a href="javascript:void(0)">Xóa</a>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)">Sửa</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            <td>
-                                <a href="javascript:void(0)">Xóa</a>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)">Sửa</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                            <td>
-                                <a href="javascript:void(0)">Xóa</a>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)">Sửa</a>
-                            </td>
-                        </tr>
+                        
 
                     </tbody>
                 </table>
             </div>
+            
         </div>
+        <div class="row ">
+            <div class="col-xl-12 text-center">
+                    <pagination-controls (pageChange)="p = $event" ></pagination-controls>
+            </div>
+        </div>
+        
     </div>
