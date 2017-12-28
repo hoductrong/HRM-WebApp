@@ -16,6 +16,10 @@ namespace DependencyInjectionSample.Interfaces
         /// Save change to database
         /// </summary>
         void SaveChanges();
+        /// <summary>
+        /// Commit transaction
+        /// </summary>
+        void Commit();
 
         /// <summary>
         /// Revert changes

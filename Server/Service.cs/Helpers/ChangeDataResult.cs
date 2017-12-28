@@ -6,6 +6,9 @@ namespace QuanLyNongTrai.Service
     /// Notify for user errors about validate or other error when insert or update entity
     /// </summary>
     public class ChangeDataResult{
+        /// <summary>
+        /// Create Success ChangeDataResult
+        /// </summary>
         public ChangeDataResult(){
             Succeeded = true;
         }

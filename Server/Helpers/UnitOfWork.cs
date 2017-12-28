@@ -21,10 +21,13 @@ namespace QuanLyNongTrai.Helpers
 
         public void SaveChanges()
         {
+            _dbContext.SaveChanges();
+        }
+
+        public void Commit(){
             if(_transaction == null)
                 return;
             _transaction.Commit();
-            _dbContext.SaveChanges();
         }
 
         public void RollBack()

@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using QuanLyNongTrai.Helpers;
 using QuanLyNongTrai.Model;
 using QuanLyNongTrai.Model.Entity;
+using QuanLyNongTrai.Service;
 using QuanLyNongTrai.UI.Entity;
 
 namespace QuanLyNongTrai
@@ -28,18 +29,21 @@ namespace QuanLyNongTrai
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IPersonalService _personalService;
         private readonly IConfiguration _configuration;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<ApplicationRole> roleManager,
+            IPersonalService personalService,
             IConfiguration configuration
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _personalService = personalService;
             _configuration = configuration;
         }
 
@@ -198,7 +202,10 @@ namespace QuanLyNongTrai
                 var result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
-                    return NoContent();
+                    message = new ResponseMessageModel{
+                        Code = MessageCode.SUCCESS
+                    };
+                    return message;
                 }
                 else
                 {
@@ -277,12 +284,15 @@ namespace QuanLyNongTrai
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
-
+            //Add roles to token
             var roles = await _userManager.GetRolesAsync(user);
             foreach (string role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
+            //Add full name to token
+            var personal = _personalService.Find(user.PersonalId);
+            claims.Add(new Claim(ClaimTypes.Name,personal.FullName));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
