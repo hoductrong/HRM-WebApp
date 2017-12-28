@@ -36,11 +36,13 @@ namespace QuanLyNongTrai
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 options.UseSqlServer(Configuration.GetConnectionString("default"));
             });
-            
-            services.AddIdentity<ApplicationUser, ApplicationRole>(options => {
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireLowercase = true;
@@ -56,23 +58,26 @@ namespace QuanLyNongTrai
             //========== Add Jwt Authentication ================
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services
-                .AddAuthentication(options => {
+                .AddAuthentication(options =>
+                {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer(cfg => {
+                .AddJwtBearer(cfg =>
+                {
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
-                    cfg.TokenValidationParameters  = new TokenValidationParameters{
-                        ValidIssuer  = Configuration["JwtIssuer"],
-                        ValidAudience  = Configuration["JwtIssuer"],
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["JwtIssuer"],
+                        ValidAudience = Configuration["JwtIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
                         ClockSkew = TimeSpan.Zero
                     };
                 });
 
-        
+
             ConfigureDependencyInjection(services);
 
             services.AddMvc();
@@ -91,11 +96,13 @@ namespace QuanLyNongTrai
                 builder.WithOrigins("http://localhost:4200"));
 
             //redirect to angular
-            app.Use(async (context, next) => {
-            await next();
-            if (context.Response.StatusCode == 404 &&
-                !Path.HasExtension(context.Request.Path.Value) &&
-                !context.Request.Path.Value.StartsWith("/api/")) {
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404 &&
+                    !Path.HasExtension(context.Request.Path.Value) &&
+                    !context.Request.Path.Value.StartsWith("/api/"))
+                {
                     context.Request.Path = "/index.html";
                     await next();
                 }

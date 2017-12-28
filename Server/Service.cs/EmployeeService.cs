@@ -42,6 +42,7 @@ namespace QuanLyNongTrai.Service
                 }
                 entity.Id = Guid.NewGuid();
                 _employeeRepository.Add(entity);
+                _unitOfWork.Commit();
                 _unitOfWork.SaveChanges();
                 return result;
             }
@@ -54,6 +55,14 @@ namespace QuanLyNongTrai.Service
                         Description = ex.Message
                     });
             }
+        }
+
+        public override Employee Find(object id){
+            var entity = base.Find(id);
+            if(entity != null){
+                entity.Personal = _personalService.Find(entity.PersonalId);
+            }
+            return entity;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DependencyInjectionSample.Interfaces;
 using QuanLyNongTrai.Model.Entity;
 using QuanLyNongTrai.Repository;
@@ -20,45 +21,24 @@ namespace QuanLyNongTrai.Service
 
         public virtual ChangeDataResult Add(TEntity entity)
         {
-            try
-            {
-                if (entity == null)
-                    throw new ArgumentNullException();
-                var result = Validate(entity);
-                if (!result.Succeeded)
-                    return result;
-                _repository.Add(entity);
+            if (entity == null)
+                throw new ArgumentNullException();
+            var result = Validate(entity);
+            if (!result.Succeeded)
                 return result;
-            }
-            catch (Exception ex)
-            {
-                return ChangeDataResult.Fails(
-                    new ChangeDataError
-                    {
-                        Code = MessageCode.SQL_ACTION_ERROR,
-                        Description = ex.Message
-                    });
-            }
+            _repository.Add(entity);
+            _unitOfWork.SaveChanges();
+            return result;
         }
 
         public virtual ChangeDataResult Delete(TEntity entity)
         {
-            try
-            {
-                if (entity == null)
-                    throw new ArgumentException();
-                entity.IsDelete = true;
-                _repository.Update(entity);
-                return new ChangeDataResult();
-            }
-            catch (Exception ex)
-            {
-                return ChangeDataResult.Fails(new ChangeDataError
-                {
-                    Code = MessageCode.SQL_ACTION_ERROR,
-                    Description = ex.Message
-                });
-            }
+            if (entity == null)
+                throw new ArgumentException();
+            entity.IsDelete = true;
+            _repository.Update(entity);
+            _unitOfWork.SaveChanges();
+            return new ChangeDataResult();
         }
 
         public void Dispose()
@@ -68,35 +48,27 @@ namespace QuanLyNongTrai.Service
 
         public virtual TEntity Find(object id)
         {
-            return _repository.Find(id);
+            var entity =  _repository.Find(id);
+            if(entity != null && entity.IsDelete == true)
+                return null;
+            return entity;
         }
 
         public virtual IEnumerable<TEntity> GetAll()
         {
-            return _repository.GetAll();
+            return _repository.GetAll().Where(e => e.IsDelete == false);
         }
 
         public virtual ChangeDataResult Update(TEntity entity)
         {
-            try
-            {
-                if (entity == null)
-                    throw new ArgumentNullException();
-                var result = Validate(entity);
-                if (!result.Succeeded)
-                    return result;
-                _repository.Update(entity);
+            if (entity == null)
+                throw new ArgumentNullException();
+            var result = Validate(entity);
+            if (!result.Succeeded)
                 return result;
-
-            }
-            catch (Exception ex)
-            {
-                return ChangeDataResult.Fails(new ChangeDataError
-                {
-                    Code = MessageCode.SQL_ACTION_ERROR,
-                    Description = ex.Message
-                });
-            }
+            _repository.Update(entity);
+            _unitOfWork.SaveChanges();
+            return result;
         }
 
         public virtual ChangeDataResult Validate(TEntity entity)
