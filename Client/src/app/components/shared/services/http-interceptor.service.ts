@@ -32,16 +32,16 @@ export class HttpInterceptorService implements HttpInterceptor {
       if (resErr instanceof HttpErrorResponse) {
         if (resErr.error instanceof Error) {
           // A client-side or network error occurred. Handle it accordingly.
-        console.log('An error occurred:', resErr.error.message);
         }
-        console.log(`Backend returned code ${resErr.status}, body was: ${resErr.error.errorMessage}`);
-          this.msService.add(resErr.error.errorMessage);        
+        // if(resErr.error.errorMessage != null){
+        //   this.msService.add(resErr.error.errorMessage);   
+        // }     
         
-        if(resErr.status==403&&resErr.error.errorMessage=="You must change password for login first time"){
+        if(resErr.status===403&&resErr.error.errorMessage=="You must change password for login first time"){
           this.router.navigate(['/re-password']);
         }
       }
-        if(resErr.status==401){
+        if(resErr.status===401){
           localStorage.removeItem("token");
           this.router.navigate(['/login']);
         }

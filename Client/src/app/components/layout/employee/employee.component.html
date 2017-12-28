@@ -1,147 +1,166 @@
 <div [@routerTransition]>
     <h2 class="text-muted">Nhân viên</h2>
     <hr>
-    
+
     <div class="row">
         <div class="col-xl-2">
             <button type="button" class="btn btn-secondary btn-block" (click)="open(content)">Thêm </button>
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                  <h4 class="modal-title">Xuất nguyên liệu</h4>
-                  <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+                    <h4 class="modal-title">Thêm nhân viên</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                  <div class="row">
-                    <div class="col-xl-6">
-                      <p>Loại nguyên liệu</p>
-                    </div>
-                    <div class="col-xl-6">
-                      <select class="custom-select">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xl-6">
-                      <p>Tên nguyên liệu</p>
-                    </div>
-                    <div class="col-xl-6">
-                      <select class="custom-select">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-xl-6">
-                      <p>Số lượng</p>
-                    </div>
-                    <div class="col-xl-6">
-                      <input type="text" class="form-control" id="amount">
-                    </div>
-                    </div>  
                     <div class="row">
-                      <div class="col-xl-6">
-                        <p>Nông dân nhận</p>
-                      </div>
-                      <div class="col-xl-6">
-                        <select class="custom-select">
-                          <option selected>Open this select menu</option>
-                          <option value="1">One</option>
-                          <option value="2">Two</option>
-                          <option value="3">Three</option>
-                        </select>
-                      </div>
+                        <div class="col-xl-6">
+                            <p>Họ và Tên</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <input type="text" [(ngModel)]="emp.fullName" class="form-control" id="fullname">
+                        </div>
                     </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary " (click)="c('Close click')">Xác nhận</button>
-                  </div>
-              </ng-template>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Địa chỉ</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <input type="text" [(ngModel)]="emp.address" class="form-control" id="address">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Giới tính</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <select [(ngModel)]="emp.sex" class="custom-select">
+                                <option value="1">Nam</option>
+                                <option value="0">Nữ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Ngày sinh</p>
+                        </div>
+                        <div class="col-xl-6">
+
+                            <div class="input-group ">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="emp.birthday" ngbDatepicker #e="ngbDatepicker">
+                                <button class="input-group-addon" (click)="e.toggle()" type="button">
+                                    <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Số điện thoại</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <input type="text" [(ngModel)]="emp.phone" class="form-control" id="phonenumber">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Ngày làm việc</p>
+                        </div>
+                        <div class="col-xl-6">
+
+                            <div class="input-group ">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="emp.startWorkTime" ngbDatepicker #f="ngbDatepicker">
+                                <button class="input-group-addon" (click)="f.toggle()" type="button">
+                                    <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary " (click)="c(emp)">Xác nhận</button>
+                    </div>
+                </div>
+            </ng-template>
+            </div>
+            <div class="col-xl-4"></div>
+            <div class="col-xl-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm tên nhân viên..." aria-label="Tìm kiếm tên nhân viên...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" type="button">Tìm kiếm!</button>
+                    </span>
+                </div>
+            </div>
         </div>
-        <div class="col-xl-4"></div>
-        <div class="col-xl-6">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Tìm kiếm tên nhân viên..." aria-label="Tìm kiếm tên nhân viên...">
-                <span class="input-group-btn">
-                    <button class="btn btn-secondary" type="button">Go!</button>
-                </span>
+        <hr>
+        <div class="card mb-3">
+            <div class="card-header">Bảng nhân viên</div>
+            <div class="card-body table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Username</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                            <td>
+                                <a href="">Xóa</a>
+                            </td>
+                            <td>
+                                <a href="">Sửa</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@TwBootstrap</td>
+                            <td>
+                                <a href="javascript:void(0)">Xóa</a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)">Sửa</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                            <td>
+                                <a href="javascript:void(0)">Xóa</a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)">Sửa</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">4</th>
+                            <td colspan="2">Larry the Bird</td>
+                            <td>@twitter</td>
+                            <td>
+                                <a href="javascript:void(0)">Xóa</a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)">Sửa</a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <hr>
-    <div class="card mb-3">
-        <div class="card-header">Bảng cây trồng</div>
-        <div class="card-body table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Username</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>
-                            <a href="">Xóa</a>
-                        </td>
-                        <td>
-                            <a href="">Sửa</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@TwBootstrap</td>
-                        <td>
-                            <a href="javascript:void(0)">Xóa</a>
-                        </td>
-                        <td>
-                            <a href="javascript:void(0)">Sửa</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                        <td>
-                            <a href="javascript:void(0)">Xóa</a>
-                        </td>
-                        <td>
-                            <a href="javascript:void(0)">Sửa</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">4</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                        <td>
-                            <a href="javascript:void(0)">Xóa</a>
-                        </td>
-                        <td>
-                            <a href="javascript:void(0)">Sửa</a>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
