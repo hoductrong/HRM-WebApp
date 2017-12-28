@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DependencyInjectionSample.Interfaces;
 using QuanLyNongTrai.Model.Entity;
 using QuanLyNongTrai.Repository;
@@ -19,6 +20,16 @@ namespace QuanLyNongTrai.Service
         {
             _employeeRepository = employeeRepository;
             _personalService = personalService;
+        }
+
+        public IEnumerable<EmployeeModel> GetAllEmployeeDetail(){
+            List<EmployeeModel> result = new List<EmployeeModel>();
+            var employees = base.GetAll();
+            foreach(var employee in employees){
+                employee.Personal = _personalService.Find(employee.PersonalId);
+                result.Add(EmployeeModel.GetModel(employee));
+            }
+            return result;
         }
 
         public override ChangeDataResult Add(Employee entity)
