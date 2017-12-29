@@ -2,21 +2,28 @@
     <div class="row justify-content-md-center">
         <div class="col-md-4">
             <img src="assets/images/logo.png" width="150px" class="user-avatar" />
-            <h1>SB Admin BS4 Angular4</h1>
-            <form role="form">
-                <div class="form-content">
-                    <div class="form-group">
-                        <input type="text" ng-model="name" class="form-control input-underline input-lg" id="" placeholder="Email">
+            <h1>Đăng nhập</h1>
+            
+                <form role="form" name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+                    <div class="form-group " [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+                        <label for="username">Tên đăng nhập</label>
+                        <input  type="text" class="form-control form-control input-underline input-lg" name="username" [(ngModel)]="user.Username" #username="ngModel" required />
+                        <div *ngIf="f.submitted && !username.valid" class="help-block">Vui lòng nhập tên đăng nhập</div>
+                        <div class="help-block">{{user.Username}}</div>
                     </div>
-
-                    <div class="form-group">
-                        <input type="password" class="form-control input-underline input-lg" id="" placeholder="Password">
+                    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+                        <label for="password">Mật khẩu</label>
+                        <input type="password" class="form-control input-underline input-lg" name="password" [(ngModel)]="user.Password" #password="ngModel" required />
+                        <div *ngIf="f.submitted && !password.valid" class="help-block">Vui lòng nhập mật khẩu</div>
+                        <div class="help-block">{{msService.messages}}</div>
                     </div>
-                </div>
-                <a class="btn rounded-btn" [routerLink]="['/dashboard']" (click)="onLoggedin()"> Log in </a>
-                &nbsp;
-                <a class="btn rounded-btn" [routerLink]="['/signup']">Register</a>
-            </form>
+                    <div class="form-group">
+                        <button class="btn btn-primary">Đăng nhập</button>
+                        
+                        
+                    </div>
+                </form>
+            
         </div>
     </div>
 </div>

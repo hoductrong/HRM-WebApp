@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { TokenService } from '../../../shared/services/token.service'
 
 @Component({
     selector: 'app-header',
@@ -8,9 +9,9 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
     pushRightClass: string = 'push-right';
-
-    constructor(public router: Router) {
-
+    personInfo : object;
+    constructor(public router: Router,public tkService: TokenService) {
+        this.decodeToken();
         this.router.events.subscribe(val => {
             if (
                 val instanceof NavigationEnd &&
@@ -22,7 +23,19 @@ export class HeaderComponent implements OnInit {
         });
     }
 
-    ngOnInit() {}
+    decodeToken(){
+        let tk = this.tkService.getTokenLocal();
+        let infString = tk.slice(tk.indexOf('.')+1,tk.lastIndexOf('.'));
+        this.personInfo = JSON.parse(atob(infString));
+    }
+
+    isRole(role : string){
+        if(role == "manager") return "Quản trị viên";
+    }
+
+    ngOnInit() {
+        
+    }
 
     isToggled(): boolean {
         const dom: Element = document.querySelector('body');
@@ -40,7 +53,7 @@ export class HeaderComponent implements OnInit {
     }
 
     onLoggedout() {
-        localStorage.removeItem('isLoggedin');
+        this.tkService.removeToken();
     }
 
     
