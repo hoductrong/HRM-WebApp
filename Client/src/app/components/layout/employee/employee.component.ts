@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../../router.animations';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Employee } from '../../shared/services/class'
-import { EmployeeService, MessageService } from '../../shared/services'
+import { EmployeeService } from '../../shared/services'
 
 @Component({
 
@@ -28,12 +28,12 @@ export class EmployeeComponent implements OnInit {
   filter : Employee = new Employee();
   notificate : string;
   empCollection : Employee[] = new Array<Employee>();
+
   constructor(
       private modalService: NgbModal, 
       private empService : EmployeeService,
-      private msgService : MessageService
     ) {
-        
+        this.getAllEmployees();
      }
      
   open(content) {
@@ -42,26 +42,16 @@ export class EmployeeComponent implements OnInit {
       .then((result) => {
           this.emp.birthday = `${this.time1["month"].toString()}-${this.time1["day"].toString()}-${this.time1["year"].toString()} `;
           this.emp.startWorkTime = `${this.time2["month"].toString()}-${this.time2["day"].toString()}-${this.time2["year"].toString()} `;
-          this.empService.createEmployee(result)
-          .then(
-              data => {
-                  this.temp = data;
-                  window.alert('Thêm nhân viên thành công');
-                  this.getAllEmployees();
-              },
-              error =>{
-                  window.alert(error);
-              }
-
-          )
-      }, (reason) => {
+          this.createEmployee(result);
+    }, (reason) => {
           
-      });
+    });
   }
 
   ngOnInit() {
     this.getAllEmployees();
   }
+
   getAllEmployees(){
     this.empService.getEmployees()
     .then(
@@ -72,5 +62,38 @@ export class EmployeeComponent implements OnInit {
             window.alert(err);
         }
     )
+  }
+
+  createEmployee(emp : Employee){
+    this.empService.createEmployee(emp)
+          .then(
+              data => {
+                  window.alert('Thêm nhân viên thành công');
+                  this.empCollection.push(data);
+              },
+              error =>{
+                  window.alert(error);
+              }
+
+          )
+      
+  }
+
+  deleteEmpoyee(emp : Employee){
+      this.empService.deleteEmployees(emp)
+      .then(
+          data => {
+           this.getAllEmployees();
+            
+          },
+          err => {
+              window.alert(err);
+          }
+      )
+  }
+
+  isSex(num:number){
+    if(num===1) return 'Nam';
+    else return 'Nữ';
   }
 }

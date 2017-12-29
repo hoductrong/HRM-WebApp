@@ -41,8 +41,26 @@ export class EmployeeService {
     }) 
   }
 
-  setEmployee(em : Employee){
-    this.employee = em;
+  deleteEmployees(emp : Employee):Promise<any>{
+    
+    return Promise((resolve,reject) => {
+      this.http.delete<ResponseMessage>(`${this.urlEmp}/${emp.employeeId}`).subscribe(
+        data => {
+          if(data.code == "200"){
+            
+            resolve(data.data as Employee);
+            
+          }
+          else {
+            reject(data.errorMessage);
+          }
+          
+        },
+        error=>{
+          reject(error);
+        }
+      )
+    }) 
   }
 
   getEmployees():Promise<any>{

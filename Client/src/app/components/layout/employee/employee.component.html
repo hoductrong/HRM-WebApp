@@ -96,7 +96,7 @@
             <div class="col-xl-4"></div>
             <div class="col-xl-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" [(ngModel)]="filter.personalId" placeholder="Tìm kiếm tên nhân viên..." aria-label="Tìm kiếm tên nhân viên...">
+                    <input type="text" class="form-control" [(ngModel)]="filter.fullName" placeholder="Tìm kiếm tên nhân viên..." aria-label="Tìm kiếm tên nhân viên...">
                     <span class="input-group-btn">
                         <button class="btn btn-secondary" type="button">Tìm kiếm!</button>
                     </span>
@@ -114,21 +114,23 @@
                             <th>Giới tính</th>
                             <th>Ngày vào làm</th>
                             <th>Mức lương</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let employee of empCollection | filterBy: filter | 
                         paginate: { itemsPerPage: 5,
                         currentPage: p}">
-                            <th>{{employee.personalId}}}</th>
-                            <td>{{employee.id}}</td>
-                            <td>{{employee.startWorkTime}}</td>
+                            <td>{{employee.fullName}}</td>
+                            <td>{{isSex(employee.sex)}}</td>
+                            <td>{{employee.phone}}</td>
                             <td>{{employee.salary}}</td>
                             <td>
-                                <a href="">Xóa</a>
+                                <a href="javascript:void(0)" (click)='deleteEmpoyee(employee)'>Xóa</a>
                             </td>
                             <td>
-                                <a href="">Sửa</a>
+                                <a href="javascript:void(0)">Sửa</a>
                             </td>
                         </tr>
                         

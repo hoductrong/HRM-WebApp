@@ -16,6 +16,10 @@ export class TokenService {
       localStorage.setItem("token",this.token.token);
   }
 
+  getTokenLocal(){
+    return localStorage.getItem("token");
+  }
+
   checkToken(){
     if(localStorage.getItem("token")) return true;
     else return false;
@@ -24,7 +28,7 @@ export class TokenService {
   removeToken(){
     localStorage.removeItem("token");
   }
-  
+
   getToken(user:UserLogin){
     
     this.http.post<ResponseMessage>(this.urlToken,user).subscribe(
