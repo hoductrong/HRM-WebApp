@@ -3,7 +3,6 @@ import { routerTransition } from '../../../router.animations';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Employee } from '../../shared/services/class';
 import { EmployeeService } from '../../shared/services';
-import { ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
 
@@ -14,6 +13,7 @@ import { ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
 })
 export class EmployeeComponent implements OnInit {
     p : Number = 1;
+    emp : Employee = new Employee();
   time1 : object = {
     "year": 1990,
     "month": 1,
@@ -24,27 +24,22 @@ export class EmployeeComponent implements OnInit {
     "month": 1,
     "day": 1
   };
-  temp : Employee = new Employee();
-  emp : Employee = new Employee();
   filter : Employee = new Employee();
-  notificate : string;
   empCollection : Employee[] = new Array<Employee>();
 
   constructor(
       private modalService: NgbModal, 
       private empService : EmployeeService,
-      private ref : ChangeDetectorRef,
       private zone : NgZone
-    ) {
-        //this.getAllEmployees();
-     }
+    ) { }
      
   open(content) {
     this.modalService.open(content)
       .result
       .then((result) => {
-          this.emp.birthday = `${this.time1["month"].toString()}-${this.time1["day"].toString()}-${this.time1["year"].toString()} `;
-          this.emp.startWorkTime = `${this.time2["month"].toString()}-${this.time2["day"].toString()}-${this.time2["year"].toString()} `;
+          let emp = new Employee();
+          emp.birthday = `${this.time1["month"].toString()}-${this.time1["day"].toString()}-${this.time1["year"].toString()} `;
+          emp.startWorkTime = `${this.time2["month"].toString()}-${this.time2["day"].toString()}-${this.time2["year"].toString()} `;
           this.createEmployee(result);
     }, (reason) => {
           

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Employee, ResponseMessage } from './class';
+import { ResponseMessage, Farmer } from './class';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from './message.service';
 
@@ -7,21 +7,20 @@ import { Observable } from 'rxjs/Observable';
 import { Promise } from 'q';
 
 @Injectable()
-export class EmployeeService {
-  urlEmp : string = 'api/employees';
+export class FarmerService {
+  urlFrmr : string = 'api/farmers';
   constructor(
     public http : HttpClient,
     public msgService : MessageService
   ) { }
-
-  createEmployee(emp : Employee):Promise<any>{
+  createFarmer(frmr : Farmer):Promise<any>{
     
     return Promise((resolve,reject) => {
-      this.http.post<ResponseMessage>(this.urlEmp,emp).subscribe(
+      this.http.post<ResponseMessage>(this.urlFrmr,frmr).subscribe(
         data=>{
           if(data.code == "200"){
             
-            resolve(data.data as Employee);
+            resolve(data.data as Farmer);
             
           }
           else {
@@ -37,14 +36,14 @@ export class EmployeeService {
     }) 
   }
 
-  deleteEmployees(emp : Employee):Promise<any>{
+  deleteFarmer(frmr : Farmer):Promise<any>{
     
     return Promise((resolve,reject) => {
-      this.http.delete<ResponseMessage>(`${this.urlEmp}/${emp.employeeId}`).subscribe(
+      this.http.delete<ResponseMessage>(`${this.urlFrmr}/${frmr.farmerId}`).subscribe(
         data => {
           if(data.code == "200"){
             
-            resolve(data.data as Employee);
+            resolve(data.data as Farmer);
             
           }
           else {
@@ -59,14 +58,14 @@ export class EmployeeService {
     }) 
   }
 
-  getEmployees():Promise<any>{
+  getFarmers():Promise<any>{
     
     return Promise((resolve,reject) => {
-      this.http.get<ResponseMessage>(this.urlEmp).subscribe(
+      this.http.get<ResponseMessage>(this.urlFrmr).subscribe(
         data=>{
           if(data.code == "200"){
             
-            resolve(data.data as Employee[]);
+            resolve(data.data as Farmer[]);
             
           }
           else {

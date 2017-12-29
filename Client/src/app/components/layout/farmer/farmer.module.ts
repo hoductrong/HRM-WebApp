@@ -1,18 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FarmerRoutingModule } from './farmer-routing.module';
+import { HttpClientModule, HttpClient,HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { FilterPipeModule } from 'ngx-filter-pipe';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { TokenService, FarmerService, HttpInterceptorService,AccountService,MessageService } from '../../shared/services';
+
+import { FarmerRoutingModule } from './farmer-routing.module';
 import { FarmerComponent } from './farmer.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal/modal';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     NgbModule.forRoot(),
-    FarmerRoutingModule
+    FarmerRoutingModule,
+    HttpClientModule,
+    NgxPaginationModule,
+    FilterPipeModule
   ],
-  declarations: [FarmerComponent]
+  declarations: [FarmerComponent],
+  providers:[
+    MessageService,FarmerService,
+    { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true },
+  ]
 })
 export class FarmerModule { }

@@ -7,7 +7,7 @@ import { EmployeeComponent } from './employee.component';
 import { FormsModule } from '@angular/forms';
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { TokenService,HttpInterceptorService,AccountService,MessageService,EmployeeService } from '../../shared/services'
+import { TokenService,HttpInterceptorService,AccountService,MessageService,EmployeeService } from '../../shared/services';
 
 @NgModule({
   imports: [
