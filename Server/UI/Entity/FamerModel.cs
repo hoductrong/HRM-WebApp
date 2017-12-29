@@ -1,14 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc;
 using QuanLyNongTrai.Model.Entity;
 
 namespace QuanLyNongTrai.UI.Entity
 {
     public class FamerModel {
-        [BindNever]
         public Guid FamerId {get;set;}
-        [BindNever]
         public Guid PersonalId {get;set;}
         [MaxLength(50)]
         [Required]
@@ -16,7 +14,6 @@ namespace QuanLyNongTrai.UI.Entity
         [MaxLength(100)]
         public string Address {get;set;}
         [Range(0,1)]
-        [Required]
         public int Sex {get;set;}
         public DateTime? BirthDay {get;set;}
         [MaxLength(11)]
