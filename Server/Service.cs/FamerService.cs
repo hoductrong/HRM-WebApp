@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using QuanLyNongTrai.Helpers;
 using QuanLyNongTrai.Model.Entity;
 using QuanLyNongTrai.Repository;
@@ -69,13 +70,80 @@ namespace QuanLyNongTrai.Service
                 });
             }
         }
-        
-        public IEnumerable<Famer> GetAllFamerDetail(){
+
+        public IEnumerable<Famer> GetAllFamerDetail()
+        {
             var famers = base.GetAll();
-            foreach(var famer in famers){
+            foreach (var famer in famers)
+            {
                 famer.Personal = _personalService.Find(famer.PersonalId);
             }
             return famers;
+        }
+        /// <summary>
+        /// Get personal information of famer
+        /// </summary>
+        /// <param name="famerId">Id of famer</param>
+        /// <returns></returns>
+        public Personal GetPersonal(Guid famerId)
+        {
+            var famer = _famerRepository.Find(famerId);
+            return _personalService.Find(famer.PersonalId);
+        }
+
+        /// <summary>
+        /// Update Famer information
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public ChangeDataResult UpdateFamerWithPersonal(Famer entity)
+        {
+            if (entity.Personal == null)
+                return ChangeDataResult.Fails(new ChangeDataError
+                {
+                    Code = MessageCode.DATA_VALIDATE_ERROR
+                });
+            var result = Validate(entity);
+            //validate faild
+            if (!result.Succeeded)
+            {
+                return ChangeDataResult.Fails(new ChangeDataError
+                {
+                    Code = MessageCode.DATA_VALIDATE_ERROR
+                });
+            }
+            //validate success
+            _unitOfWork.BeginTransaction();
+            try
+            {
+                //update personal information
+                result = _personalService.Update(entity.Personal);
+                if (!result.Succeeded)
+                {
+                    return ChangeDataResult.Fails(new ChangeDataError
+                    {
+                        Code = MessageCode.SQL_ACTION_ERROR,
+                        Description = result.GetError()
+                    });
+                }
+                //update personal success
+                //then update employee
+                entity.Personal = null;
+                _famerRepository.Update(entity);
+                _unitOfWork.Commit();
+                _unitOfWork.SaveChanges();
+                return new ChangeDataResult();
+            }
+            catch (SqlException ex)
+            {
+                //error, rollback change
+                _unitOfWork.RollBack();
+                return ChangeDataResult.Fails(new ChangeDataError
+                {
+                    Code = MessageCode.SQL_ACTION_ERROR,
+                    Description = ex.Message
+                });
+            }
         }
     }
 }

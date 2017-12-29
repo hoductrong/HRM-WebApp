@@ -1,13 +1,16 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using QuanLyNongTrai.Model.Entity;
 
-namespace QuanLyNongTrai.Repository{
+namespace QuanLyNongTrai.Repository
+{
     public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         protected readonly DbContext _dbContext;
         protected readonly DbSet<TEntity> _dbSet;
-        public BaseRepository(DbContext context){
+        public BaseRepository(DbContext context)
+        {
             _dbContext = context;
             _dbSet = _dbContext.Set<TEntity>();
         }
@@ -18,7 +21,8 @@ namespace QuanLyNongTrai.Repository{
 
         public virtual void Delete(TEntity entity)
         {
-            if(_dbContext.Entry(entity).State == EntityState.Deleted){
+            if (_dbContext.Entry(entity).State == EntityState.Deleted)
+            {
                 _dbSet.Attach(entity);
             }
             _dbSet.Remove(entity);

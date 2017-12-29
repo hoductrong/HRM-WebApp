@@ -14,7 +14,8 @@ namespace QuanLyNongTrai
     {
         private readonly IFamerService _famerService;
         public FamerController(
-            IFamerService famerService)
+            IFamerService famerService,
+            IPersonalService personalService)
         {
             _famerService = famerService;
         }
@@ -110,10 +111,36 @@ namespace QuanLyNongTrai
         [Route("{famerId}")]
         [HttpPut]
         [Authorize(Roles = "manager,famer")]
-        public object UpdateFamer(Guid famerId,[ModelBinder]FamerModel model)
+        public object UpdateFamer(Guid famerId, [FromBody]FamerModel model)
         {
-            Guid id = model.FamerId;
-            return null;
+            if (ModelState.IsValid)
+            {
+                if(model.PersonalId == Guid.Empty){
+                    return this.Message(MessageCode.DATA_VALIDATE_ERROR,"Yêu cầu PersonalId");
+                }
+                var famer = model.CreateEntity();
+                famer.Id = famerId;
+                //update model
+                try
+                {
+                    var result = _famerService.UpdateFamerWithPersonal(famer);
+                    if (result.Succeeded)
+                    {
+                        return this.Message(FamerModel.GetModel(famer));
+                    }else{
+                        //error
+                        return this.Message(MessageCode.DATA_VALIDATE_ERROR,result.GetError());
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    return this.Message(MessageCode.SQL_ACTION_ERROR, ex.Message);
+                }
+            }
+            else
+            {
+                return this.Message(MessageCode.DATA_VALIDATE_ERROR);
+            }
         }
     }
 }
