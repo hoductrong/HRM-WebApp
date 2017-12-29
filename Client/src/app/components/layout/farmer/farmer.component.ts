@@ -29,15 +29,14 @@ export class FarmerComponent implements OnInit {
       this.modalService.open(content)
       .result
       .then((result) => {
-        let frmr = new Farmer();
-        frmr.birthDay = `${this.time1["month"].toString()}-${this.time1["day"].toString()}-${this.time1["year"].toString()} `;
+        result.birthDay = `${this.time1["month"].toString()}-${this.time1["day"].toString()}-${this.time1["year"].toString()} `;
         this.createFarmer(result);
       }, (reason) => {
       });
   }
 
   ngOnInit() {
-
+    this.getAllFarmers();
   }
 
   getAllFarmers(){
@@ -95,7 +94,7 @@ export class FarmerComponent implements OnInit {
 
   deleteInArray(frmrC : Farmer[],frmr : Farmer){
     return frmrC.filter(frmr2 => {
-        return frmr2.farmerId != frmr.farmerId;
+        return frmr2.famerId != frmr.famerId;
     })
   }
 }

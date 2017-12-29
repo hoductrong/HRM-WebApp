@@ -8,7 +8,7 @@ import { Promise } from 'q';
 
 @Injectable()
 export class FarmerService {
-  urlFrmr : string = 'api/farmers';
+  urlFrmr : string = 'api/famers';
   constructor(
     public http : HttpClient,
     public msgService : MessageService
@@ -39,7 +39,7 @@ export class FarmerService {
   deleteFarmer(frmr : Farmer):Promise<any>{
     
     return Promise((resolve,reject) => {
-      this.http.delete<ResponseMessage>(`${this.urlFrmr}/${frmr.farmerId}`).subscribe(
+      this.http.delete<ResponseMessage>(`${this.urlFrmr}/${frmr.famerId}`).subscribe(
         data => {
           if(data.code == "200"){
             

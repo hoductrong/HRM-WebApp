@@ -1,5 +1,5 @@
 export class Farmer {
-    public farmerId : string;
+    public famerId : string;
     public personalId : string;
     public fullName : string;
     public address : string;

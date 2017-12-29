@@ -21,7 +21,11 @@ export class HttpInterceptorService implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const customReq = request.clone({
-      headers : request.headers.set('Authorization', 'Bearer ' + localStorage.getItem("token"))
+      
+      setHeaders : {
+        'Content-Type' : 'application/json',
+        'Authorization' : 'Bearer ' + localStorage.getItem("token")
+      }
     });
     
     return next
@@ -38,6 +42,11 @@ export class HttpInterceptorService implements HttpInterceptor {
           localStorage.removeItem("token");
           this.router.navigate(['/login']);
         }
+
+        if(resErr.status===404){
+          this.router.navigate(['/not-found']);
+        }
+
 
         if(resErr.error != null){
           this.msService.add(resErr.error.errorMessage);   
