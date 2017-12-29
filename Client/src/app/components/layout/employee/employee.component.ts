@@ -70,6 +70,7 @@ export class EmployeeComponent implements OnInit {
               data => {
                   window.alert('Thêm nhân viên thành công');
                   this.empCollection.push(data);
+                  this.empCollection.
               },
               error =>{
                   window.alert(error);
