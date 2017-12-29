@@ -53,8 +53,9 @@ namespace QuanLyNongTrai
                 .AddUserStore<ApplicationUserStore>()
                 .AddRoleStore<ApplicationRoleStore>()
                 .AddUserManager<ApplicationUserManager>()
-                .AddRoleManager<ApplicationRoleManager>();
-
+                .AddRoleManager<ApplicationRoleManager>()
+                .AddDefaultTokenProviders();
+                
             //========== Add Jwt Authentication ================
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services
