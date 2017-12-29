@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { routerTransition } from '../../../router.animations';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { Employee } from '../../shared/services/class'
-import { EmployeeService } from '../../shared/services'
+import { Employee } from '../../shared/services/class';
+import { EmployeeService } from '../../shared/services';
+import { ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
 
   selector: 'app-employee',
   templateUrl: './employee.component.html',
   animations: [routerTransition()],
-  styleUrls: ['./employee.component.scss']
+  styleUrls: ['./employee.component.scss'],
 })
 export class EmployeeComponent implements OnInit {
     p : Number = 1;
@@ -32,8 +33,10 @@ export class EmployeeComponent implements OnInit {
   constructor(
       private modalService: NgbModal, 
       private empService : EmployeeService,
+      private ref : ChangeDetectorRef,
+      private zone : NgZone
     ) {
-        this.getAllEmployees();
+        //this.getAllEmployees();
      }
      
   open(content) {
@@ -56,7 +59,10 @@ export class EmployeeComponent implements OnInit {
     this.empService.getEmployees()
     .then(
         data => {
+            this.zone.run(() => {
             this.empCollection = data;
+            });
+            
         },
         err => {
             window.alert(err);
@@ -68,9 +74,10 @@ export class EmployeeComponent implements OnInit {
     this.empService.createEmployee(emp)
           .then(
               data => {
-                  window.alert('Thêm nhân viên thành công');
-                  this.empCollection.push(data);
-                  this.empCollection.
+                this.zone.run(() => {
+                    window.alert('Thêm nhân viên thành công');
+                    this.empCollection.push(data);
+                    });
               },
               error =>{
                   window.alert(error);
@@ -84,7 +91,10 @@ export class EmployeeComponent implements OnInit {
       this.empService.deleteEmployees(emp)
       .then(
           data => {
-           this.getAllEmployees();
+            this.zone.run(() => {
+                this.empCollection = this.deleteInArray(this.empCollection,emp);
+                console.log(this.deleteInArray(this.empCollection,data));
+                });
             
           },
           err => {
@@ -96,5 +106,11 @@ export class EmployeeComponent implements OnInit {
   isSex(num:number){
     if(num===1) return 'Nam';
     else return 'Nữ';
+  }
+
+  deleteInArray(empC : Employee[],emp : Employee){
+    return empC.filter(emp2 => {
+        return emp2.employeeId != emp.employeeId;
+    })
   }
 }
