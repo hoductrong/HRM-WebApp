@@ -34,9 +34,7 @@ namespace QuanLyNongTrai
             var famer = model.CreateEntity();
             if (famer == null)
             {
-                message = ResponseMessageModel.CreateResponse(
-                    MessageCode.DATA_VALIDATE_ERROR);
-                return message;
+                return this.Message(MessageCode.DATA_VALIDATE_ERROR);
             }
             try
             {
@@ -44,20 +42,14 @@ namespace QuanLyNongTrai
                 var result = _famerService.Add(famer);
                 if (!result.Succeeded)
                 {
-                    message = ResponseMessageModel.CreateResponse(
-                        MessageCode.DATA_VALIDATE_ERROR,
-                        result.GetError()
-                    );
-                    return message;
+                    return this.Message(MessageCode.DATA_VALIDATE_ERROR,result.GetError());
                 }
                 //add success
-                return FamerModel.GetModel(famer);
+                return this.Message(FamerModel.GetModel(famer));
             }
             catch (SqlException ex)
             {
-                //error
-                message = ResponseMessageModel.CreateResponse(MessageCode.SQL_ACTION_ERROR, ex.Message);
-                return message;
+                return this.Message(MessageCode.SQL_ACTION_ERROR,ex.Message);
             }
         }
 
