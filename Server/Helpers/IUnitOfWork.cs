@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QuanLyNongTrai.Model.Entity;
 using QuanLyNongTrai.Repository;
 
-namespace DependencyInjectionSample.Interfaces
+namespace QuanLyNongTrai.Helpers
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -11,7 +11,7 @@ namespace DependencyInjectionSample.Interfaces
         /// Begin traction
         /// </summary>
         void BeginTransaction();
-        
+
         /// <summary>
         /// Save change to database
         /// </summary>

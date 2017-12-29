@@ -170,7 +170,7 @@ namespace QuanLyNongTrai
 
             if (result.Succeeded)
             {
-                var userInfo = new
+                var userInfo = new UserRegistedModel
                 {
                     UserName = user.UserName,
                     Id = user.Id,
@@ -183,9 +183,13 @@ namespace QuanLyNongTrai
                 return message;
             }
             //errors occur
+            string errorMessage = "";
+            foreach(var error in result.Errors){
+                errorMessage += error.Description + "\r\n";
+            }
             message = new ResponseMessageModel{
                 Code = MessageCode.SQL_ACTION_ERROR,
-                ErrorMessage = result.Errors.ToString()
+                ErrorMessage = errorMessage
             };
             return message;
         }
@@ -225,6 +229,41 @@ namespace QuanLyNongTrai
             };
             return message;
         }
+
+        [Route("{userId}/reset")]
+        [HttpPut]
+        [Authorize(Roles="manager")]
+        public async Task<object> ResetPassword(Guid userId){
+            ResponseMessageModel message;
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if(user == null){
+                message = ResponseMessageModel.CreateResponse(
+                    MessageCode.OBJECT_NOT_FOUND,
+                    "Không tìm thấy user");
+                return message;
+            }
+
+            //generate new password
+            string newPassword = PasswordGenerator.GenerateRandomPassword();
+            //generate token and reset password
+            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user,token,newPassword);
+            if(!result.Succeeded){
+                message = ResponseMessageModel.CreateResponse(
+                    MessageCode.SQL_ACTION_ERROR,
+                    "Không thể khởi tạo password mới");
+                return message;
+            }
+            //reset success
+            var userRegistedModel = new UserRegistedModel{
+                UserName = user.UserName,
+                Id = user.Id,
+                Password = newPassword
+            };
+            message = ResponseMessageModel.CreateResponse(userRegistedModel);
+            return message;
+        }
+
 #if DEBUG
         [Route("generate")]
         [HttpPost]

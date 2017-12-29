@@ -19,7 +19,6 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using DependencyInjectionSample.Interfaces;
 using QuanLyNongTrai.Helpers;
 
 namespace QuanLyNongTrai
@@ -53,8 +52,9 @@ namespace QuanLyNongTrai
                 .AddUserStore<ApplicationUserStore>()
                 .AddRoleStore<ApplicationRoleStore>()
                 .AddUserManager<ApplicationUserManager>()
-                .AddRoleManager<ApplicationRoleManager>();
-
+                .AddRoleManager<ApplicationRoleManager>()
+                .AddDefaultTokenProviders();
+                
             //========== Add Jwt Authentication ================
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services

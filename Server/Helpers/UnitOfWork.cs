@@ -1,6 +1,6 @@
 using System;
 using System.Data.SqlClient;
-using DependencyInjectionSample.Interfaces;
+using QuanLyNongTrai.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using QuanLyNongTrai.Model;

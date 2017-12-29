@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
-using DependencyInjectionSample.Interfaces;
 using QuanLyNongTrai.Service;
+using QuanLyNongTrai.Helpers;
 using QuanLyNongTrai.UI.Entity;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -127,7 +127,7 @@ namespace QuanLyNongTrai
                 {
                     message = ResponseMessageModel.CreateResponse(
                         MessageCode.DATA_VALIDATE_ERROR,
-                        result.ToString());
+                        result.GetError());
                     return message;
                 }
             }

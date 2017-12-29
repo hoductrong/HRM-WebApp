@@ -1,4 +1,4 @@
-using DependencyInjectionSample.Interfaces;
+using QuanLyNongTrai.Helpers;
 using QuanLyNongTrai.Model.Entity;
 using QuanLyNongTrai.Repository;
 

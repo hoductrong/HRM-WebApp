@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DependencyInjectionSample.Interfaces;
+using QuanLyNongTrai.Helpers;
 using QuanLyNongTrai.Model.Entity;
 using QuanLyNongTrai.Repository;
 using QuanLyNongTrai.UI.Entity;
