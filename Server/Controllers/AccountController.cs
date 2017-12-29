@@ -183,9 +183,13 @@ namespace QuanLyNongTrai
                 return message;
             }
             //errors occur
+            string errorMessage = "";
+            foreach(var error in result.Errors){
+                errorMessage += error.Description + "\r\n";
+            }
             message = new ResponseMessageModel{
                 Code = MessageCode.SQL_ACTION_ERROR,
-                ErrorMessage = result.Errors.ToString()
+                ErrorMessage = errorMessage
             };
             return message;
         }

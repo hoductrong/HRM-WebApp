@@ -91,10 +91,14 @@ namespace QuanLyNongTrai
                 return message;
             }
             //error occurs
+            string errorMessage = "";
+            foreach(var error in result.Errors){
+                errorMessage += error.Description + "\r\n";
+            }
             message = new ResponseMessageModel
             {
                 Code = MessageCode.SQL_ACTION_ERROR,
-                ErrorMessage = result.ToString()
+                ErrorMessage = errorMessage
             };
             return message;
         }

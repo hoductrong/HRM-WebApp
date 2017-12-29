@@ -1,4 +1,3 @@
-using DependencyInjectionSample.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,12 +16,12 @@ namespace QuanLyNongTrai
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IEmployeeRepository, EmployeeRepository>();
             services.AddTransient<IPersonalRepository, PersonalRepository>();
-
+            services.AddTransient<IFamerRepository, FamerRepository>();
             //configure service
             services.AddTransient(typeof(IService<>), typeof(BaseService<>));
             services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IPersonalService, PersonalService>();
-
+            services.AddTransient<IFamerService, FamerService>();
             //configure UnitOfWork
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 

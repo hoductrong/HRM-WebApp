@@ -19,7 +19,6 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using DependencyInjectionSample.Interfaces;
 using QuanLyNongTrai.Helpers;
 
 namespace QuanLyNongTrai
