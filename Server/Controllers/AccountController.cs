@@ -348,5 +348,16 @@ namespace QuanLyNongTrai
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        [Route("{userId}")]
+        [HttpGet]
+        [Authorize]
+        public async Task<object> GetUserInformation(Guid userId){
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if(user == null){
+                return this.Message(MessageCode.OBJECT_NOT_FOUND);
+            }
+            return this.Message(UserInformationModel.GetModel(user));
+        }
+
     }
 }
