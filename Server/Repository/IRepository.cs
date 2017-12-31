@@ -8,6 +8,12 @@ namespace QuanLyNongTrai.Repository{
         /// </summary>
         /// <returns></returns>
         IEnumerable<TEntity> GetAll();
+        /// <summary>
+        /// Get all record and includes table of it
+        /// </summary>
+        /// <param name="includes">Name of properties need include</param>
+        /// <returns></returns>
+        IEnumerable<TEntity> GetAll(params string[] includes);
 
         /// <summary>
         /// Add new entity
@@ -27,6 +33,13 @@ namespace QuanLyNongTrai.Repository{
         /// <param name="Id"></param>
         /// <returns></returns>
         TEntity Find(object id);
+        /// <summary>
+        /// Find a entity with Id. Include property
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="includes">Name of properties</param>
+        /// <returns></returns>
+        TEntity Find(object id, params string[] includes);
 
         /// <summary>
         /// Delete entity

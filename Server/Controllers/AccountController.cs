@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -52,7 +53,7 @@ namespace QuanLyNongTrai
         public async Task<object> Login([FromBody]UserLoginModel model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
-            
+
             ResponseMessageModel message;
             if (result.Succeeded)
             {
@@ -65,23 +66,25 @@ namespace QuanLyNongTrai
                         Code = MessageCode.ERROR,
                         ErrorMessage = "Bạn phải thay đổi mật khẩu cho lần đầu đăng nhập"
                     };
-                    return StatusCode(StatusCodes.Status403Forbidden,message);
+                    return StatusCode(StatusCodes.Status403Forbidden, message);
                 }
                 var token = new TokenModel
                 {
                     Token = (string)(await GenerateJwtToken(model.UserName, appUser))
                 };
-                return new ResponseMessageModel {
+                return new ResponseMessageModel
+                {
                     Code = MessageCode.SUCCESS,
                     Data = token
                 };
             }
-            message = new ResponseMessageModel{
+            message = new ResponseMessageModel
+            {
                 Code = MessageCode.ERROR,
                 ErrorMessage = "Tài khoản hoặc mật khẩu không chính xác"
             };
-            return StatusCode(StatusCodes.Status403Forbidden,message);
-            
+            return StatusCode(StatusCodes.Status403Forbidden, message);
+
         }
 
         [Route("")]
@@ -91,7 +94,8 @@ namespace QuanLyNongTrai
             ResponseMessageModel message;
             if (model == null)
             {
-                message = new ResponseMessageModel{
+                message = new ResponseMessageModel
+                {
                     Code = MessageCode.PARAMETER_NULL
                 };
                 return message;
@@ -109,7 +113,8 @@ namespace QuanLyNongTrai
             }
 
             ApplicationUser user = await _userManager.FindByNameAsync(model.UserName);
-            if(user == null){
+            if (user == null)
+            {
                 message = new ResponseMessageModel
                 {
                     Code = MessageCode.OBJECT_NOT_FOUND,
@@ -118,21 +123,24 @@ namespace QuanLyNongTrai
                 return message;
             }
 
-            var result = await _userManager.ChangePasswordAsync(user,model.OldPassword, model.Password);
-            if(result.Succeeded){
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.Password);
+            if (result.Succeeded)
+            {
                 user.PasswordChanged = true;
                 await _userManager.UpdateAsync(user);
                 var token = new TokenModel
                 {
                     Token = (string)(await GenerateJwtToken(model.UserName, user))
                 };
-                return new ResponseMessageModel {
+                return new ResponseMessageModel
+                {
                     Code = MessageCode.SUCCESS,
                     Data = token
                 };
             }
-            
-            message = new ResponseMessageModel{
+
+            message = new ResponseMessageModel
+            {
                 Code = MessageCode.SQL_ACTION_ERROR,
                 ErrorMessage = "Có lỗi xảy ra, Không thể thay đổi mật khẩu"
             };
@@ -152,7 +160,8 @@ namespace QuanLyNongTrai
 
             if (userRegister.Password != userRegister.RePassword)
             {
-                message = new ResponseMessageModel{
+                message = new ResponseMessageModel
+                {
                     Code = MessageCode.DATA_VALIDATE_ERROR,
                     ErrorMessage = "Mật khẩu không khớp nhau"
                 };
@@ -176,7 +185,8 @@ namespace QuanLyNongTrai
                     Id = user.Id,
                     Password = userRegister.Password
                 };
-                message = new ResponseMessageModel{
+                message = new ResponseMessageModel
+                {
                     Code = MessageCode.SUCCESS,
                     Data = userInfo
                 };
@@ -184,10 +194,12 @@ namespace QuanLyNongTrai
             }
             //errors occur
             string errorMessage = "";
-            foreach(var error in result.Errors){
+            foreach (var error in result.Errors)
+            {
                 errorMessage += error.Description + "\r\n";
             }
-            message = new ResponseMessageModel{
+            message = new ResponseMessageModel
+            {
                 Code = MessageCode.SQL_ACTION_ERROR,
                 ErrorMessage = errorMessage
             };
@@ -206,7 +218,8 @@ namespace QuanLyNongTrai
                 var result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
-                    message = new ResponseMessageModel{
+                    message = new ResponseMessageModel
+                    {
                         Code = MessageCode.SUCCESS
                     };
                     return message;
@@ -214,17 +227,20 @@ namespace QuanLyNongTrai
                 else
                 {
                     string errors = "";
-                    foreach(var e in result.Errors){
+                    foreach (var e in result.Errors)
+                    {
                         errors += e.Description + "\r\n";
                     }
-                    message = new ResponseMessageModel{
+                    message = new ResponseMessageModel
+                    {
                         Code = MessageCode.SQL_ACTION_ERROR,
                         ErrorMessage = errors
                     };
                     return message;
                 }
             }
-            message = new ResponseMessageModel{
+            message = new ResponseMessageModel
+            {
                 Code = MessageCode.OBJECT_NOT_FOUND
             };
             return message;
@@ -232,11 +248,13 @@ namespace QuanLyNongTrai
 
         [Route("{userId}/reset")]
         [HttpPut]
-        [Authorize(Roles="manager")]
-        public async Task<object> ResetPassword(Guid userId){
+        [Authorize(Roles = "manager")]
+        public async Task<object> ResetPassword(Guid userId)
+        {
             ResponseMessageModel message;
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            if(user == null){
+            if (user == null)
+            {
                 message = ResponseMessageModel.CreateResponse(
                     MessageCode.OBJECT_NOT_FOUND,
                     "Không tìm thấy user");
@@ -247,15 +265,17 @@ namespace QuanLyNongTrai
             string newPassword = PasswordGenerator.GenerateRandomPassword();
             //generate token and reset password
             string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var result = await _userManager.ResetPasswordAsync(user,token,newPassword);
-            if(!result.Succeeded){
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            if (!result.Succeeded)
+            {
                 message = ResponseMessageModel.CreateResponse(
                     MessageCode.SQL_ACTION_ERROR,
                     "Không thể khởi tạo password mới");
                 return message;
             }
             //reset success
-            var userRegistedModel = new UserRegistedModel{
+            var userRegistedModel = new UserRegistedModel
+            {
                 UserName = user.UserName,
                 Id = user.Id,
                 Password = newPassword
@@ -331,7 +351,7 @@ namespace QuanLyNongTrai
             }
             //Add full name to token
             var personal = _personalService.Find(user.PersonalId);
-            claims.Add(new Claim(ClaimTypes.Name,personal.FullName));
+            claims.Add(new Claim(ClaimTypes.Name, personal.FullName));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -346,6 +366,92 @@ namespace QuanLyNongTrai
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        [Route("{userId}")]
+        [HttpGet]
+        [Authorize]
+        public async Task<object> GetUserInformation(Guid userId)
+        {
+            //only allow change information of owner user
+            if (this.GetCurrentUserId() == userId)
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                if (user == null)
+                {
+                    return this.Message(MessageCode.OBJECT_NOT_FOUND);
+                }
+                return this.Message(UserInformationModel.GetModel(user));
+            }
+            else
+            {
+                return this.Message(MessageCode.FORBIDDEN);
+            }
+
+        }
+
+        /// <summary>
+        /// Get all role of user have userId
+        /// </summary>
+        /// <param name="userId">Id of user</param>
+        /// <returns></returns>
+        [Route("{userId}/roles")]
+        [HttpGet]
+        [Authorize(Roles = "manager")]
+        public async Task<object> GetRoles(Guid userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                if (user == null)
+                {
+                    return this.Message(MessageCode.OBJECT_NOT_FOUND);
+                }
+                var result = await _userManager.GetRolesAsync(user);
+                return this.Message(result);
+            }
+            catch (Exception ex)
+            {
+                return this.Message(MessageCode.SQL_ACTION_ERROR, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update roles of user
+        /// </summary>
+        /// <param name="userId">Id of user</param>
+        /// <param name="roles">role list</param>
+        /// <returns></returns>
+        [Route("{userId}/roles")]
+        [HttpPut]
+        [Authorize(Roles = "manager")]
+        public async Task<object> UpdateRoleOfUser(Guid userId, [FromBody]string[] roles)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                return this.Message(MessageCode.OBJECT_NOT_FOUND);
+            }
+            try
+            {
+                var oldRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user,oldRoles);
+                var result = await _userManager.AddToRolesAsync(user, roles);
+                if (!result.Succeeded)
+                {
+                    string messageError = "";
+                    foreach (var error in result.Errors)
+                    {
+                        messageError += error.Description + "\r\n";
+                    }
+                    return this.Message(MessageCode.DATA_VALIDATE_ERROR, messageError);
+                }
+                return this.Message(null);
+            }
+            catch (SqlException ex)
+            {
+                return this.Message(MessageCode.SQL_ACTION_ERROR, ex.Message);
+            }
         }
 
     }

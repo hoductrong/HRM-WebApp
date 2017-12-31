@@ -52,6 +52,11 @@ namespace QuanLyNongTrai.Service
             return entity;
         }
 
+        public TEntity Find(object id, params string[] includes)
+        {
+            return _repository.Find(id,includes);
+        }
+
         public virtual IEnumerable<TEntity> GetAll()
         {
             return _repository.GetAll().Where(e => e.IsDelete == false);

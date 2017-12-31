@@ -26,7 +26,7 @@ namespace QuanLyNongTrai.Service
             List<EmployeeModel> result = new List<EmployeeModel>();
             var employees = base.GetAll();
             foreach(var employee in employees){
-                employee.Personal = _personalService.Find(employee.PersonalId);
+                employee.Personal = _personalService.Find(employee.PersonalId, "ApplicationUser");
                 result.Add(EmployeeModel.GetModel(employee));
             }
             return result;

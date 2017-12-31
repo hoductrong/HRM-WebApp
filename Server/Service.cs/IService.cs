@@ -28,6 +28,13 @@ namespace QuanLyNongTrai.Service{
         /// <param name="Id"></param>
         /// <returns></returns>
         TEntity Find(object id);
+        /// <summary>
+        /// Find a entity with Id. Include property
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="includes">Name of properties</param>
+        /// <returns></returns>
+        TEntity Find(object id, params string[] includes);
 
         /// <summary>
         /// Delete entity
