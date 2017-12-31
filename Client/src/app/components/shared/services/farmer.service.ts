@@ -58,6 +58,28 @@ export class FarmerService {
     }) 
   }
 
+  editFarmer(frmr : Farmer):Promise<any>{
+    
+    return Promise((resolve,reject) => {
+      this.http.put<ResponseMessage>(`${this.urlFrmr}/${frmr.famerId}`,frmr).subscribe(
+        data => {
+          if(data.code == "200"){
+            
+            resolve(data.data as Farmer);
+            
+          }
+          else {
+            reject(data.errorMessage);
+          }
+          
+        },
+        error=>{
+          reject(error);
+        }
+      )
+    }) 
+  }
+
   getFarmers():Promise<any>{
     
     return Promise((resolve,reject) => {

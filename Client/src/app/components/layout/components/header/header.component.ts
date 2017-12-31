@@ -31,6 +31,7 @@ export class HeaderComponent implements OnInit {
 
     isRole(role : string){
         if(role == "manager") return "Quản trị viên";
+        if(role == "farmer") return "Nông dân";
     }
 
     ngOnInit() {

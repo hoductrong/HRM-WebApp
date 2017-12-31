@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { routerTransition } from '../../../../router.animations';
 
 @Component({
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.scss']
+    styleUrls: ['./sidebar.component.scss'],
+    animations: [routerTransition()]
 })
 export class SidebarComponent {
     isActive: boolean = false;

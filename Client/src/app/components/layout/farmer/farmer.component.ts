@@ -35,6 +35,19 @@ export class FarmerComponent implements OnInit {
       });
   }
 
+  openEditMenu(frmr : Farmer,content){
+      this.farmer = frmr;
+      this.time1['year'] = parseInt(frmr.birthDay.substr(0,4));
+      this.time1['month'] = parseInt(frmr.birthDay.substr(5,2));
+      this.time1['day'] = parseInt(frmr.birthDay.substr(8,2));
+      this.modalService.open(content)
+      .result
+      .then((result) => {
+        this.editFarmer(result);
+      }, (reason) => {
+      });
+  }
+
   ngOnInit() {
     this.getAllFarmers();
   }
@@ -71,6 +84,24 @@ export class FarmerComponent implements OnInit {
       
   }
 
+  editFarmer(frmr : Farmer){
+    this.frmrService.editFarmer(frmr)
+          .then(
+              data => {
+                this.zone.run(() => {
+                    window.alert('Sửa nông dân thành công');
+                    this.frmrCollection[this.frmrCollection.findIndex(el => el.famerId === data.famerId)] = data;
+
+                });
+              },
+              error =>{
+                  window.alert(error);
+              }
+
+          )
+      
+  }  
+
   deleteFarmer(frmr : Farmer){
       this.frmrService.deleteFarmer(frmr)
       .then(
@@ -91,6 +122,7 @@ export class FarmerComponent implements OnInit {
     if(num===1) return 'Nam';
     else return 'Nữ';
   }
+
 
   deleteInArray(frmrC : Farmer[],frmr : Farmer){
     return frmrC.filter(frmr2 => {

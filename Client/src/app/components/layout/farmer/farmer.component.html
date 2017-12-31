@@ -18,7 +18,7 @@
                             <p>Họ và Tên</p>
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="farmer.fullName" class="form-control" id="fullname">
+                            <input type="text"  [(ngModel)]="farmer.fullName" class="form-control" id="fullname">
                         </div>
                     </div>
                     <div class="row">
@@ -108,13 +108,18 @@
                                 <a href="javascript:void(0)" (click)='deleteFarmer(farmer)'>Xóa</a>
                             </td>
                             <td>
-                                <a href="javascript:void(0)">Sửa</a>
+                                <a href="javascript:void(0)" (click)='openEditMenu(farmer,content)'>Sửa</a>
                             </td>
                         </tr>
                     
 
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-xl-12 text-center">
+                <pagination-controls (pageChange)="p = $event" previousLabel="Trước" nextLabel="Sau" ></pagination-controls>
         </div>
     </div>
 </div>

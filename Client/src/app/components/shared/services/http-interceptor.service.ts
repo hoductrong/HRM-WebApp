@@ -34,7 +34,8 @@ export class HttpInterceptorService implements HttpInterceptor {
       if (resErr instanceof HttpErrorResponse) {
             
         
-        if(resErr.status===403&&resErr.error.errorMessage=="You must change password for login first time"){
+        if(resErr.status===403&&resErr.error.errorMessage=="Bạn phải thay đổi mật khẩu cho lần đầu đăng nhập"){
+          window.alert(resErr.error.errorMessage);
           this.router.navigate(['/re-password']);
         }
 
