@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -372,7 +373,7 @@ namespace QuanLyNongTrai
         [Authorize]
         public async Task<object> GetUserInformation(Guid userId)
         {
-            //only change information of owner user
+            //only allow change information of owner user
             if (this.GetCurrentUserId() == userId)
             {
                 var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -381,10 +382,76 @@ namespace QuanLyNongTrai
                     return this.Message(MessageCode.OBJECT_NOT_FOUND);
                 }
                 return this.Message(UserInformationModel.GetModel(user));
-            }else{
+            }
+            else
+            {
                 return this.Message(MessageCode.FORBIDDEN);
             }
 
+        }
+
+        /// <summary>
+        /// Get all role of user have userId
+        /// </summary>
+        /// <param name="userId">Id of user</param>
+        /// <returns></returns>
+        [Route("{userId}/roles")]
+        [HttpGet]
+        [Authorize(Roles = "manager")]
+        public async Task<object> GetRoles(Guid userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                if (user == null)
+                {
+                    return this.Message(MessageCode.OBJECT_NOT_FOUND);
+                }
+                var result = await _userManager.GetRolesAsync(user);
+                return this.Message(result);
+            }
+            catch (Exception ex)
+            {
+                return this.Message(MessageCode.SQL_ACTION_ERROR, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update roles of user
+        /// </summary>
+        /// <param name="userId">Id of user</param>
+        /// <param name="roles">role list</param>
+        /// <returns></returns>
+        [Route("{userId}/roles")]
+        [HttpPut]
+        [Authorize(Roles = "manager")]
+        public async Task<object> UpdateRoleOfUser(Guid userId, [FromBody]string[] roles)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                return this.Message(MessageCode.OBJECT_NOT_FOUND);
+            }
+            try
+            {
+                var oldRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user,oldRoles);
+                var result = await _userManager.AddToRolesAsync(user, roles);
+                if (!result.Succeeded)
+                {
+                    string messageError = "";
+                    foreach (var error in result.Errors)
+                    {
+                        messageError += error.Description + "\r\n";
+                    }
+                    return this.Message(MessageCode.DATA_VALIDATE_ERROR, messageError);
+                }
+                return this.Message(null);
+            }
+            catch (SqlException ex)
+            {
+                return this.Message(MessageCode.SQL_ACTION_ERROR, ex.Message);
+            }
         }
 
     }
