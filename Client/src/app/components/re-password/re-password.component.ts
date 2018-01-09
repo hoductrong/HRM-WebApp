@@ -14,17 +14,28 @@ import { UserChangePassword } from '../shared/services/class/user-change-passwor
 export class RePasswordComponent implements OnInit {
   //luu thong tin mat khau cua user
   user = new UserChangePassword();
+  message = '';
 
   constructor(
     public router: Router, 
     public tkService : TokenService, 
-    public msService : MessageService,
     public accService : AccountService) { }
 
   ngOnInit() {
   }
 
   changePassword(){
-    this.accService.rePassword(this.user);
+            
+    this.accService.rePassword(this.user)
+    .then(
+      data => {
+        localStorage.setItem("token",data.token);
+        this.router.navigate(['/dashboard']);
+      },
+      error =>{
+        this.message = error;
+      }
+    )
+    
   }
 }

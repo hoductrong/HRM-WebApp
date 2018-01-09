@@ -26,7 +26,9 @@ export class HeaderComponent implements OnInit {
     decodeToken(){
         let tk = this.tkService.getTokenLocal();
         let infString = tk.slice(tk.indexOf('.')+1,tk.lastIndexOf('.'));
-        this.personInfo = JSON.parse(atob(infString));
+        console.log(this.b64DecodeUnicode(infString));
+        this.personInfo = JSON.parse(this.b64DecodeUnicode(infString));
+        
     }
 
     isRole(role : string){
@@ -55,6 +57,12 @@ export class HeaderComponent implements OnInit {
 
     onLoggedout() {
         this.tkService.removeToken();
+    }
+    b64DecodeUnicode(str) {
+        // Going backwards: from bytestream, to percent-encoding, to original string.
+        return decodeURIComponent(atob(str).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
     }
 
     
