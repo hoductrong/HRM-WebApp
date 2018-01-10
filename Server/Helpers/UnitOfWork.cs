@@ -21,6 +21,11 @@ namespace QuanLyNongTrai.Helpers
 
         public void SaveChanges()
         {
+            NewMethod();
+        }
+
+        private static void NewMethod()
+        {
             _dbContext.SaveChanges();
         }
 

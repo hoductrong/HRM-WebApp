@@ -85,15 +85,8 @@ namespace QuanLyNongTrai
         {
             try
             {
-                var famers = _famerService.GetAllFamerDetail();
-                //create FamerModel
-                List<FamerModel> models = new List<FamerModel>();
-                foreach (var famer in famers)
-                {
-                    var model = FamerModel.GetModel(famer);
-                    models.Add(model);
-                }
-                return this.Message(models);
+                var famersModel = _famerService.GetAllFamerDetail();
+                return this.Message(famersModel);
             }
             catch (SqlException ex)
             {

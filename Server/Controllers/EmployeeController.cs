@@ -103,13 +103,13 @@ namespace QuanLyNongTrai
 
         [Route("{employeeId}")]
         [HttpDelete]
-        [Authorize(Roles ="manager")]
+        [Authorize(Roles = "manager")]
         public object Delete(Guid employeeId)
         {
             ResponseMessageModel message;
             var employee = _employeeService.Find(employeeId);
             //entity isn't found
-            if (employee == null )
+            if (employee == null)
             {
                 message = ResponseMessageModel.CreateResponse(MessageCode.OBJECT_NOT_FOUND);
                 return message;
@@ -133,15 +133,16 @@ namespace QuanLyNongTrai
             }
             catch (SqlException ex)
             {
-                message = ResponseMessageModel.CreateResponse(MessageCode.SQL_ACTION_ERROR,ex.Message);
+                message = ResponseMessageModel.CreateResponse(MessageCode.SQL_ACTION_ERROR, ex.Message);
                 return message;
             }
         }
 
         [Route("{employeeId}")]
         [HttpGet]
-        [Authorize(Roles="manager")]
-        public object GetEmployee(Guid employeeId){
+        [Authorize(Roles = "manager")]
+        public object GetEmployee(Guid employeeId)
+        {
             ResponseMessageModel message;
             var employee = _employeeService.Find(employeeId);
             //entity isn't found
@@ -155,5 +156,40 @@ namespace QuanLyNongTrai
             message = ResponseMessageModel.CreateResponse(model);
             return message;
         }
+
+        /// <summary>
+        /// Update employee information
+        /// </summary>
+        /// <param name="employeeId">Id of employee</param>
+        /// <param name="model">employee information</param>
+        /// <returns>employee information is updated</returns>
+        [Route("{employeeId}")]
+        [HttpPut]
+        [Authorize(Roles = "manager")]
+        public object EditEmployee(Guid employeeId,[FromBody] EmployeeModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var employee = model.GetEntity();
+                employee.Id = employeeId;
+                //if it is found, then update 
+                var result = _employeeService.Update(employee);
+                //update success
+                if (result.Succeeded)
+                {
+                    return ResponseMessageModel.CreateResponse(MessageCode.SUCCESS);
+                }
+                //update failed
+                return ResponseMessageModel.CreateResponse(MessageCode.SQL_ACTION_ERROR, result.GetError());
+            }
+            else
+            {
+                //get and return error
+                string errors = this.GetError(ModelState.Values);
+                return ResponseMessageModel.CreateResponse(MessageCode.DATA_VALIDATE_ERROR, errors);
+            }
+        }
+
+        
     }
 }

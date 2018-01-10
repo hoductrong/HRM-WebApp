@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using QuanLyNongTrai.UI.Entity;
+using static Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary;
+
 namespace Microsoft.AspNetCore.Mvc
 {
     public static class ControllerExtention
@@ -30,6 +32,24 @@ namespace Microsoft.AspNetCore.Mvc
             var claims = (List<Claim>)((ClaimsIdentity)controller.User.Identity).Claims;
             var value = claims.Where(c => c.Type == ClaimTypes.NameIdentifier).SingleOrDefault().Value;
             return Guid.Parse(value);
+        }
+
+        /// <summary>
+        /// Get error string of ModelState
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static string GetError(this Controller controller, ValueEnumerable values)
+        {
+            string errors = "";
+            foreach (var modelState in values)
+            {
+                foreach (var modelError in modelState.Errors)
+                {
+                    errors += modelError.ErrorMessage + "\r\n";
+                }
+            }
+            return errors;
         }
     }
 }

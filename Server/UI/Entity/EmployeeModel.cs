@@ -59,6 +59,7 @@ namespace QuanLyNongTrai.UI.Entity
             employee.EndWorkTime = this.EndWorkTime;
 
             employee.Personal = new Personal{
+                Id = this.PersonalId,
                 FullName = this.FullName,
                 Address = this.Address,
                 Sex = this.Sex == 1 ? true : false,

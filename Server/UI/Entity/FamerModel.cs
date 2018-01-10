@@ -5,30 +5,33 @@ using QuanLyNongTrai.Model.Entity;
 
 namespace QuanLyNongTrai.UI.Entity
 {
-    public class FamerModel {
-        public Guid FamerId {get;set;}
-        public Guid PersonalId {get;set;}
+    public class FamerModel
+    {
+        public Guid FamerId { get; set; }
+        public Guid PersonalId { get; set; }
         [MaxLength(50)]
         [Required]
-        public string FullName {get;set;}
+        public string FullName { get; set; }
         [MaxLength(100)]
-        public string Address {get;set;}
-        [Range(0,1)]
-        public int Sex {get;set;}
-        public DateTime? BirthDay {get;set;}
+        public string Address { get; set; }
+        [Range(0, 1)]
+        public int Sex { get; set; }
+        public DateTime? BirthDay { get; set; }
         [MaxLength(11)]
         [Required]
-        public string Phone {get;set;}
-        public string Description {get;set;}
+        public string Phone { get; set; }
+        public string Description { get; set; }
+        public bool HaveAccount { get; set; }
 
-        public FamerModel(){}
+        public FamerModel() { }
         /// <summary>
         /// Create FamerModel from Famer object
         /// </summary>
         /// <param name="famer"></param>
         /// <returns></returns>
-        public static FamerModel GetModel(Famer famer){
-            if(famer.Personal == null)
+        public static FamerModel GetModel(Famer famer)
+        {
+            if (famer.Personal == null)
                 return null;
             FamerModel model = new FamerModel();
             model.FamerId = famer.Id;
@@ -39,13 +42,15 @@ namespace QuanLyNongTrai.UI.Entity
             model.BirthDay = famer.Personal.BirthDay;
             model.Phone = famer.Personal.Phone;
             model.Description = famer.Personal.Description;
+            model.HaveAccount = famer.Personal.ApplicationUser != null ? true : false;
             return model;
         }
         /// <summary>
         /// Create Famer object from FamerModel
         /// </summary>
         /// <returns></returns>
-        public Famer CreateEntity(){
+        public Famer CreateEntity()
+        {
             Famer famer = new Famer();
             famer.Id = this.FamerId;
             famer.PersonalId = this.PersonalId;
