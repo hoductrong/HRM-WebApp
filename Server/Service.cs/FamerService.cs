@@ -71,14 +71,16 @@ namespace QuanLyNongTrai.Service
             }
         }
 
-        public IEnumerable<Famer> GetAllFamerDetail()
+        public IEnumerable<FamerModel> GetAllFamerDetail()
         {
+            List<FamerModel> result = new List<FamerModel>();
             var famers = base.GetAll();
             foreach (var famer in famers)
             {
-                famer.Personal = _personalService.Find(famer.PersonalId);
+                famer.Personal = _personalService.Find(famer.PersonalId,"ApplicationUser");
+                result.Add(FamerModel.GetModel(famer));
             }
-            return famers;
+            return result;
         }
         /// <summary>
         /// Get personal information of famer

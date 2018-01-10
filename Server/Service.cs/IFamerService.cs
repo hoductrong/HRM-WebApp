@@ -11,7 +11,7 @@ namespace QuanLyNongTrai.Service
         /// Get All famer detail.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Famer> GetAllFamerDetail();
+        IEnumerable<FamerModel> GetAllFamerDetail();
         /// <summary>
         /// Update Famer information
         /// </summary>
