@@ -4,14 +4,19 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router'
 
 import { Promise } from 'q';
-import { Token, ResponseMessage } from './class'
+import { Token, ResponseMessage, AccountCreate, UserResetPassword } from './class';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AccountService {
   private rePasswordUrl = 'api/account';  // URL doi mat khau dang nhap lan dau
 
-  constructor(private http: HttpClient, private router : Router) { }
-  /** PUT: doi mat khau lan dau */
+  constructor(
+    private http: HttpClient, 
+    private router : Router, 
+    private tkService : TokenService
+  ) { }
+ 
 
   rePassword(user: UserChangePassword):Promise<any>{
     
@@ -32,6 +37,51 @@ export class AccountService {
         }
       )
     }) 
+  }
+
+  createAccount(acc : AccountCreate):Promise<any>{
+    return Promise((resolve,reject) => {
+      this.http.post<ResponseMessage>(this.rePasswordUrl,acc).subscribe(
+        data=>{
+          if(data.code == "200"){
+            
+            resolve(data.data as UserResetPassword);
+          }
+          else {
+            reject(data.errorMessage);
+          }
+          
+        },
+        error=>{
+          reject(error);
+        }
+      )
+    }) 
+  }
+
+  getCurrentUserFullName(){
+    return this.decodeToken();
+  }
+
+  getCurrentUserRole(){
+    let curAccount;
+    curAccount = this.decodeToken();
+    return curAccount['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    
+  }
+
+  decodeToken(){
+      let tk = this.tkService.getTokenLocal();
+      let infString = tk.slice(tk.indexOf('.')+1,tk.lastIndexOf('.'));
+      return JSON.parse(this.b64DecodeUnicode(infString));
+      
+  }
+
+  b64DecodeUnicode(str) {
+      // Going backwards: from bytestream, to percent-encoding, to original string.
+      return decodeURIComponent(atob(str).split('').map((c) => {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
   }
   
 }

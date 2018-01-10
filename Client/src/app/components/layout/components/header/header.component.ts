@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { TokenService } from '../../../shared/services/token.service'
+import { AccountService } from '../../../shared/index';
 
 @Component({
     selector: 'app-header',
@@ -10,8 +11,12 @@ import { TokenService } from '../../../shared/services/token.service'
 export class HeaderComponent implements OnInit {
     pushRightClass: string = 'push-right';
     personInfo : object;
-    constructor(public router: Router,public tkService: TokenService) {
-        this.decodeToken();
+    constructor(
+        public router: Router,
+        public tkService: TokenService,
+        public accService : AccountService
+    ) {
+        this.personInfo = this.accService.getCurrentUserFullName();
         this.router.events.subscribe(val => {
             if (
                 val instanceof NavigationEnd &&
@@ -23,13 +28,7 @@ export class HeaderComponent implements OnInit {
         });
     }
 
-    decodeToken(){
-        let tk = this.tkService.getTokenLocal();
-        let infString = tk.slice(tk.indexOf('.')+1,tk.lastIndexOf('.'));
-        console.log(this.b64DecodeUnicode(infString));
-        this.personInfo = JSON.parse(this.b64DecodeUnicode(infString));
-        
-    }
+    
 
     isRole(role : string){
         if(role == "manager") return "Quản trị viên";
@@ -58,12 +57,7 @@ export class HeaderComponent implements OnInit {
     onLoggedout() {
         this.tkService.removeToken();
     }
-    b64DecodeUnicode(str) {
-        // Going backwards: from bytestream, to percent-encoding, to original string.
-        return decodeURIComponent(atob(str).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-    }
+    
 
     
 }

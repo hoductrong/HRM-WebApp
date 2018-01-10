@@ -7,4 +7,5 @@ export class Farmer {
     public birthDay : string;
     public phone : string;
     public description : string;
+    public haveAccount : boolean;
 }

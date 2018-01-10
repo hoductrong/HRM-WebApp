@@ -18,7 +18,7 @@
                             <p>Họ và Tên</p>
                         </div>
                         <div class="col-xl-6">
-                            <input type="text"  [(ngModel)]="farmer.fullName" class="form-control" id="fullname">
+                            <input type="text"  [(ngModel)]="farmer.fullName" class="form-control" id="fullname" [disabled]="isDisabled">
                         </div>
                     </div>
                     <div class="row">
@@ -26,7 +26,7 @@
                             <p>Địa chỉ</p>
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="farmer.address" class="form-control" id="address">
+                            <input type="text" [(ngModel)]="farmer.address" class="form-control" id="address" [disabled]="isDisabled">
                         </div>
                     </div>
                     <div class="row">
@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-xl-6">
                     
-                            <select [(ngModel)]="farmer.sex" class="custom-select">
+                            <select [(ngModel)]="farmer.sex" class="custom-select" [disabled]="isDisabled">
                                 <option value="1">Nam</option>
                                 <option value="0">Nữ</option>
                             </select>
@@ -48,7 +48,7 @@
                         <div class="col-xl-6">
 
                             <div class="input-group ">
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker">
+                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker" [disabled]="isDisabled">
                                 <button class="input-group-addon" (click)="e.toggle()" type="button">
                                     <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
                                 </button>
@@ -61,13 +61,23 @@
                             <p>Số điện thoại</p>
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="farmer.phone" class="form-control" id="phonenumber">
+                            <input type="text" [(ngModel)]="farmer.phone" class="form-control" id="phonenumber" [disabled]="isDisabled">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <p>Tên tài khoản</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <input type="text" [(ngModel)]="accountName" class="form-control" id="phonenumber" [disabled]="isDisabled">
                         </div>
                     </div>
                     
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary " (click)="c(farmer)">Xác nhận</button>
+                        <button type="button" class="btn btn-secondary " (click)="c(farmer)">Thêm</button>
+                        <button type="button" *ngIf ="hasAccount" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
                     </div>
+                    
                 </div>
             </ng-template>
         </div>
@@ -100,7 +110,7 @@
                     <tr *ngFor="let farmer of frmrCollection | filterBy: filter | 
                         paginate: { itemsPerPage: 5,
                         currentPage: p}">
-                            <td>{{farmer.fullName}}</td>
+                            <td (click)='watchFarmer(farmer,content)'>{{farmer.fullName}}</td>
                             <td>{{isSex(farmer.sex)}}</td>
                             <td>{{farmer.address}}</td>
                             <td>{{farmer.phone}}</td>

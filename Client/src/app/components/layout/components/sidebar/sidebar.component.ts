@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../../../router.animations';
+import { AccountService } from '../../../shared/services';
 
 @Component({
     selector: 'app-sidebar',
@@ -7,7 +8,16 @@ import { routerTransition } from '../../../../router.animations';
     styleUrls: ['./sidebar.component.scss'],
     animations: [routerTransition()]
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+    role : string;
+    constructor(
+        public accService : AccountService
+    ){
+        this.role = this.accService.getCurrentUserRole();
+    };
+
+    ngOnInit(){};
+
     isActive: boolean = false;
     showMenu1: string = 'pages1';
     showMenu2: string = 'pages2';

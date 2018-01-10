@@ -9,7 +9,7 @@ import {FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './/app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthGuard,MessageService,HttpInterceptorService } from './components/shared';
+import { AuthGuard, LoginPreventGuard, MessageService, HttpInterceptorService } from './components/shared';
 import { TokenService } from './components/shared/services'
 import { RePasswordModule } from './components/re-password/re-password.module';
 
@@ -28,7 +28,7 @@ import { RePasswordModule } from './components/re-password/re-password.module';
     AppRoutingModule,
     RePasswordModule
   ],
-  providers: [AuthGuard,TokenService,MessageService,
+  providers: [AuthGuard,TokenService,MessageService, LoginPreventGuard,
     { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }  ],
   bootstrap: [AppComponent]
 })

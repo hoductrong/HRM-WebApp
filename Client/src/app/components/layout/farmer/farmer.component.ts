@@ -1,8 +1,8 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { routerTransition } from '../../../router.animations';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { Farmer } from '../../shared/services/class';
-import { FarmerService } from '../../shared/services';
+import { Farmer, AccountCreate, UserResetPassword } from '../../shared/services/class';
+import { FarmerService,AccountService } from '../../shared/services';
 @Component({
   selector: 'app-farmer',
   templateUrl: './farmer.component.html',
@@ -10,6 +10,9 @@ import { FarmerService } from '../../shared/services';
   styleUrls: ['./farmer.component.scss']
 })
 export class FarmerComponent implements OnInit {
+    accountName = "";
+    hasAccount = false;
+    isDisabled = false;
     p : Number = 1;
     farmer : Farmer = new Farmer();
     time1 : object = {
@@ -22,6 +25,7 @@ export class FarmerComponent implements OnInit {
   constructor(
       private modalService: NgbModal,
       private frmrService : FarmerService,
+      private accService : AccountService,
       private zone : NgZone
     ) { }
 
@@ -117,6 +121,38 @@ export class FarmerComponent implements OnInit {
           }
       )
   }
+
+  watchFarmer(frmr : Farmer,content){
+
+    this.farmer = frmr;
+      this.time1['year'] = parseInt(frmr.birthDay.substr(0,4));
+      this.time1['month'] = parseInt(frmr.birthDay.substr(5,2));
+      this.time1['day'] = parseInt(frmr.birthDay.substr(8,2));
+      this.isDisabled = true;
+      this.hasAccount = frmr.haveAccount;
+      this.modalService.open(content)
+      .result
+      .then((result) => {
+        let acc : AccountCreate;
+        acc.personalId = frmr.personalId;
+        acc.userName = this.accountName;
+          
+        this.accService.createAccount(acc)
+        .then(
+            result => {
+                alert(`Tên tài khoản: ${result.userName} . Mật khẩu: ${result.password}`);
+                this.hasAccount = false;
+            },
+            error =>{
+                alert(error);
+                this.hasAccount = false;
+            }
+        )
+        
+      }, (reason) => {
+          this.hasAccount = false;
+      });
+}
 
   isSex(num:number){
     if(num===1) return 'Nam';

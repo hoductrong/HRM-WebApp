@@ -10,5 +10,6 @@ export class Employee {
     public birthday : string;
     public phone : string;
     public description : string;
+    public haveAccount : boolean;
 }
 

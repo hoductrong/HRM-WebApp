@@ -6,7 +6,8 @@ import { LayoutRoutingModule } from './layout-routing.module';
 import { LayoutComponent } from './layout.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
-import { TokenService } from '../shared'
+import { TokenService, AccountService } from '../shared';
+import { FarmerRoleGuard, ManagerRoleGuard } from '../shared/guard';
 
 @NgModule({
     imports: [
@@ -15,6 +16,6 @@ import { TokenService } from '../shared'
         NgbDropdownModule.forRoot()
     ],
     declarations: [LayoutComponent, SidebarComponent, HeaderComponent],
-    providers:[TokenService]
+    providers:[TokenService, AccountService, FarmerRoleGuard, ManagerRoleGuard]
 })
 export class LayoutModule {}
