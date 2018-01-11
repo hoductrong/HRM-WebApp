@@ -59,6 +59,28 @@ export class EmployeeService {
     }) 
   }
 
+  editEmployee(emp : Employee):Promise<any>{
+    
+    return Promise((resolve,reject) => {
+      this.http.put<ResponseMessage>(`${this.urlEmp}/${emp.employeeId}`,emp).subscribe(
+        data => {
+          if(data.code == "200"){
+            
+            resolve(data.data as Employee);
+            
+          }
+          else {
+            reject(data.errorMessage);
+          }
+          
+        },
+        error=>{
+          reject(error);
+        }
+      )
+    }) 
+  }
+
   getEmployees():Promise<any>{
     
     return Promise((resolve,reject) => {

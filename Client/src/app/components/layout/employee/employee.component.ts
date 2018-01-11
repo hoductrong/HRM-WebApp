@@ -1,8 +1,8 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { routerTransition } from '../../../router.animations';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { Employee } from '../../shared/services/class';
-import { EmployeeService } from '../../shared/services';
+import { Employee, AccountCreate } from '../../shared/services/class';
+import { EmployeeService, AccountService } from '../../shared/services';
 
 @Component({
 
@@ -12,6 +12,8 @@ import { EmployeeService } from '../../shared/services';
   styleUrls: ['./employee.component.scss'],
 })
 export class EmployeeComponent implements OnInit {
+    accountName = "";
+    isDisabled = false;
     p : Number = 1;
     emp : Employee = new Employee();
   time1 : object = {
@@ -30,21 +32,40 @@ export class EmployeeComponent implements OnInit {
   constructor(
       private modalService: NgbModal, 
       private empService : EmployeeService,
+      private accService : AccountService,
       private zone : NgZone
     ) { }
      
   open(content) {
+    this.isDisabled = false;
+    this.emp = new Employee();
+      this.emp.haveAccount = true;
     this.modalService.open(content)
       .result
       .then((result) => {
-          let emp = new Employee();
-          emp.birthday = `${this.time1["month"].toString()}-${this.time1["day"].toString()}-${this.time1["year"].toString()} `;
-          emp.startWorkTime = `${this.time2["month"].toString()}-${this.time2["day"].toString()}-${this.time2["year"].toString()} `;
+          
+          result.birthday = `${this.time1["month"].toString()}-${this.time1["day"].toString()}-${this.time1["year"].toString()} `;
+          result.startWorkTime = `${this.time2["month"].toString()}-${this.time2["day"].toString()}-${this.time2["year"].toString()} `;
           this.createEmployee(result);
     }, (reason) => {
           
     });
   }
+
+  openEditMenu(emp : Employee,content){
+    this.emp = emp;
+    this.emp.haveAccount = true;
+    this.time1['year'] = parseInt(emp.birthDay.substr(0,4));
+    this.time1['month'] = parseInt(emp.birthDay.substr(5,2));
+    this.time1['day'] = parseInt(emp.birthDay.substr(8,2));
+    this.isDisabled = false;
+    this.modalService.open(content)
+    .result
+    .then((result) => {
+      this.editEmployee(result);
+    }, (reason) => {
+    });
+}
 
   ngOnInit() {
     this.getAllEmployees();
@@ -108,4 +129,64 @@ export class EmployeeComponent implements OnInit {
         return emp2.employeeId != emp.employeeId;
     })
   }
+
+  watchEmployee(emp : Employee,content){
+
+    this.emp = emp;
+      this.time1['year'] = parseInt(emp.birthDay.substr(0,4));
+      this.time1['month'] = parseInt(emp.birthDay.substr(5,2));
+      this.time1['day'] = parseInt(emp.birthDay.substr(8,2));
+      this.isDisabled = true;
+      this.modalService.open(content)
+      .result
+      .then((result) => {
+        let acc : AccountCreate = new AccountCreate();
+        acc.personalId = emp.personalId;
+        acc.userName = this.accountName;
+          
+        this.accService.createAccount(acc)
+        .then(
+            result => {
+                this.addRole(result);
+                window.alert(`Tên tài khoản: ${result.userName} . Mật khẩu: ${result.password}`);
+            },
+            error =>{
+                window.alert(error);
+            }
+        )
+        
+      }, (reason) => {
+      });
 }
+
+addRole(result){
+    let role : string[] = ['manager'];
+    this.accService.addRoleAccount(result,role)
+    .then(
+        result =>{
+        },
+        error =>{
+            window.alert(error);
+        }
+    )
+}
+
+editEmployee(emp : Employee){
+  this.empService.editEmployee(emp)
+        .then(
+            data => {
+              this.zone.run(() => {
+                  window.alert('Sửa nhân viên thành công');
+                  this.empCollection[this.empCollection.findIndex(el => el.employeeId === data.employeeId)] = data;
+
+              });
+            },
+            error =>{
+                window.alert(error);
+            }
+
+        )
+    }  
+
+}
+

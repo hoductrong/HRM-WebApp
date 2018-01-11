@@ -1,0 +1,19 @@
+.click:hover {
+    cursor: pointer;
+}
+
+.disabled{
+    border:none;
+    border-bottom: 1px solid rgba(32, 30, 30, 0.5);
+    border-radius: unset;
+    
+    
+}
+.disabled:disabled{
+    border: none;
+    background: transparent;
+}
+.disabled:focus{
+    border: none;
+    border-bottom: 1px solid rgba(32, 30, 30, 0.5);
+}

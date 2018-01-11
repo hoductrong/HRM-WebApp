@@ -11,7 +11,6 @@ import { FarmerService,AccountService } from '../../shared/services';
 })
 export class FarmerComponent implements OnInit {
     accountName = "";
-    hasAccount = false;
     isDisabled = false;
     p : Number = 1;
     farmer : Farmer = new Farmer();
@@ -30,6 +29,9 @@ export class FarmerComponent implements OnInit {
     ) { }
 
   open(content) {
+      this.isDisabled = false;
+      this.farmer = new Farmer();
+      this.farmer.haveAccount = true;
       this.modalService.open(content)
       .result
       .then((result) => {
@@ -44,6 +46,7 @@ export class FarmerComponent implements OnInit {
       this.time1['year'] = parseInt(frmr.birthDay.substr(0,4));
       this.time1['month'] = parseInt(frmr.birthDay.substr(5,2));
       this.time1['day'] = parseInt(frmr.birthDay.substr(8,2));
+      this.isDisabled = false;
       this.modalService.open(content)
       .result
       .then((result) => {
@@ -129,29 +132,37 @@ export class FarmerComponent implements OnInit {
       this.time1['month'] = parseInt(frmr.birthDay.substr(5,2));
       this.time1['day'] = parseInt(frmr.birthDay.substr(8,2));
       this.isDisabled = true;
-      this.hasAccount = frmr.haveAccount;
       this.modalService.open(content)
       .result
       .then((result) => {
-        let acc : AccountCreate;
+        let acc : AccountCreate = new AccountCreate();
         acc.personalId = frmr.personalId;
         acc.userName = this.accountName;
           
         this.accService.createAccount(acc)
         .then(
             result => {
-                alert(`Tên tài khoản: ${result.userName} . Mật khẩu: ${result.password}`);
-                this.hasAccount = false;
+                this.addRole(result);
+                window.alert(`Tên tài khoản: ${result.userName} . Mật khẩu: ${result.password}`);
             },
             error =>{
-                alert(error);
-                this.hasAccount = false;
+                window.alert(error);
             }
         )
         
       }, (reason) => {
-          this.hasAccount = false;
       });
+}
+addRole(result){
+    let role : string[] = ['farmer'];
+    this.accService.addRoleAccount(result,role)
+    .then(
+        result =>{
+        },
+        error =>{
+            window.alert(error);
+        }
+    )
 }
 
   isSex(num:number){

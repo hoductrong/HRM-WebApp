@@ -7,7 +7,7 @@
             <button type="button" class="btn btn-secondary btn-block" (click)="open(content)">Thêm </button>
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Thêm nhân viên</h4>
+                    <h4 class="modal-title">Nhân viên</h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -18,7 +18,7 @@
                             <p>Họ và Tên</p>
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="emp.fullName" class="form-control" id="fullname">
+                            <input type="text" [disabled]="isDisabled" [(ngModel)]="emp.fullName" class="form-control disabled" id="fullname">
                         </div>
                     </div>
                     <div class="row">
@@ -26,7 +26,7 @@
                             <p>Địa chỉ</p>
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="emp.address" class="form-control" id="address">
+                            <input type="text" [disabled]="isDisabled" [(ngModel)]="emp.address" class="form-control disabled" id="address">
                         </div>
                     </div>
                     <div class="row">
@@ -34,7 +34,7 @@
                                 <p>Lương</p>
                             </div>
                             <div class="col-xl-6">
-                                <input type="text" [(ngModel)]="emp.salary" class="form-control" id="salary">
+                                <input type="text" [disabled]="isDisabled" [(ngModel)]="emp.salary" class="form-control disabled" id="salary">
                             </div>
                         </div>
                     <div class="row">
@@ -42,7 +42,7 @@
                             <p>Giới tính</p>
                         </div>
                         <div class="col-xl-6">
-                            <select [(ngModel)]="emp.sex" class="custom-select">
+                            <select [disabled]="isDisabled" [(ngModel)]="emp.sex" class="custom-select disabled">
                                 <option value="1">Nam</option>
                                 <option value="0">Nữ</option>
                             </select>
@@ -55,8 +55,8 @@
                         <div class="col-xl-6">
 
                             <div class="input-group ">
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker">
-                                <button class="input-group-addon" (click)="e.toggle()" type="button">
+                                <input class="form-control disabled" placeholder="yyyy-mm-dd" name="dp" [disabled]="isDisabled" [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker">
+                                <button class="input-group-addon disabled" (click)="e.toggle()" [disabled]="isDisabled" type="button">
                                     <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
                                 </button>
                             </div>
@@ -68,7 +68,7 @@
                             <p>Số điện thoại</p>
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="emp.phone" class="form-control" id="phonenumber">
+                            <input type="text" [disabled]="isDisabled" [(ngModel)]="emp.phone" class="form-control disabled" id="phonenumber">
                         </div>
                     </div>
                     <div class="row">
@@ -78,17 +78,25 @@
                         <div class="col-xl-6">
 
                             <div class="input-group ">
-                                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time2" ngbDatepicker #f="ngbDatepicker">
-                                <button class="input-group-addon" (click)="f.toggle()" type="button">
+                                <input class="form-control disabled" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time2" [disabled]="isDisabled" ngbDatepicker #f="ngbDatepicker">
+                                <button class="input-group-addon disabled" (click)="f.toggle()" type="button" [disabled]="isDisabled">
                                     <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
                                 </button>
                             </div>
 
                         </div>
                     </div>
-                    
+                    <div class="row" *ngIf="!emp.haveAccount&&isDisabled">
+                        <div class="col-xl-6">
+                            <p>Tên tài khoản</p>
+                        </div>
+                        <div class="col-xl-6">
+                            <input type="text" [(ngModel)]="accountName" class="form-control disabled" id="phonenumber" [disabled]="emp.haveAccount">
+                        </div>
+                    </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary " (click)="c(emp)">Xác nhận</button>
+                        <button type="button" *ngIf ="!isDisabled" class="btn btn-secondary " (click)="c(emp)">Xác nhận</button>
+                        <button type="button" *ngIf ="!emp.haveAccount" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
                     </div>
                 </div>
             </ng-template>
@@ -122,7 +130,7 @@
                         <tr *ngFor="let employee of empCollection | filterBy: filter | 
                         paginate: { itemsPerPage: 5,
                         currentPage: p}">
-                            <td>{{employee.fullName}}</td>
+                            <td class="click" (click)='watchEmployee(employee,content)'>{{employee.fullName}}</td>
                             <td>{{isSex(employee.sex)}}</td>
                             <td>{{employee.phone}}</td>
                             <td>{{employee.salary}}</td>
@@ -130,7 +138,7 @@
                                 <a href="javascript:void(0)" (click)='deleteEmpoyee(employee)'>Xóa</a>
                             </td>
                             <td>
-                                <a href="javascript:void(0)">Sửa</a>
+                                <a href="javascript:void(0)" (click)='openEditMenu(employee,content)'>Sửa</a>
                             </td>
                         </tr>
                         

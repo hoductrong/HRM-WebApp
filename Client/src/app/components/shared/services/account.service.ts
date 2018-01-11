@@ -59,6 +59,26 @@ export class AccountService {
     }) 
   }
 
+  addRoleAccount(acc : UserResetPassword,role : string[]):Promise<any>{
+    return Promise((resolve,reject) => {
+      this.http.put<ResponseMessage>(`${this.rePasswordUrl}/${acc.id}/roles`,role).subscribe(
+        data=>{
+          if(data.code == "200"){
+            
+            resolve("Success!");
+          }
+          else {
+            reject(data.errorMessage);
+          }
+          
+        },
+        error=>{
+          reject(error);
+        }
+      )
+    }) 
+  }
+
   getCurrentUserFullName(){
     return this.decodeToken();
   }
