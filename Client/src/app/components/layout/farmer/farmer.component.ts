@@ -69,7 +69,7 @@ export class FarmerComponent implements OnInit {
             
         },
         err => {
-            window.alert(err);
+            
         }
     )
   }

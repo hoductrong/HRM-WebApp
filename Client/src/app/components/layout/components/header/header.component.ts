@@ -10,13 +10,11 @@ import { AccountService } from '../../../shared/index';
 })
 export class HeaderComponent implements OnInit {
     pushRightClass: string = 'push-right';
-    personInfo : object;
     constructor(
         public router: Router,
         public tkService: TokenService,
         public accService : AccountService
     ) {
-        this.personInfo = this.accService.getCurrentUserFullName();
         this.router.events.subscribe(val => {
             if (
                 val instanceof NavigationEnd &&

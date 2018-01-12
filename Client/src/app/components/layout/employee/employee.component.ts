@@ -81,7 +81,7 @@ export class EmployeeComponent implements OnInit {
             
         },
         err => {
-            window.alert(err);
+            
         }
     )
   }

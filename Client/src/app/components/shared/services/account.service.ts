@@ -80,13 +80,23 @@ export class AccountService {
   }
 
   getCurrentUserFullName(){
-    return this.decodeToken();
+    let curAccount;
+    curAccount = this.decodeToken();
+    return curAccount['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+    
   }
 
   getCurrentUserRole(){
     let curAccount;
     curAccount = this.decodeToken();
     return curAccount['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    
+  }
+
+  getCurrentUserName(){
+    let curAccount;
+    curAccount = this.decodeToken();
+    return curAccount['sub'];
     
   }
 

@@ -19,7 +19,13 @@ export class RePasswordComponent implements OnInit {
   constructor(
     public router: Router, 
     public tkService : TokenService, 
-    public accService : AccountService) { }
+    public accService : AccountService) { 
+
+      if(this.tkService.checkToken){
+        this.user.userName = this.accService.getCurrentUserName();
+      }
+      
+    }
 
   ngOnInit() {
   }

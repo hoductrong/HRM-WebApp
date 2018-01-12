@@ -9,7 +9,6 @@
                         <label for="username">Tên đăng nhập</label>
                         <input  type="text" class="form-control form-control input-underline input-lg" name="username" [(ngModel)]="user.username" #username="ngModel" required />
                         <div *ngIf="f.submitted && !username.valid" class="help-block">Vui lòng nhập tên đăng nhập</div>
-                        <div class="help-block">{{user.username}}</div>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
                         <label for="password">Mật khẩu</label>

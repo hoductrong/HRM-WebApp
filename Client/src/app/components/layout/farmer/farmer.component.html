@@ -48,7 +48,7 @@
                         <div class="col-xl-6">
 
                             <div class="input-group ">
-                                <input class="form-control disabled" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker" [disabled]="isDisabled">
+                                <input class="form-control disabled" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker" disabled]="isDisabled">
                                 <button class="input-group-addon disabled" [disabled]="isDisabled" (click)="e.toggle()" type="button">
                                     <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
                                 </button>
@@ -75,7 +75,7 @@
                     
                     <div class="modal-footer">
                         <button type="button" *ngIf ="!isDisabled" class="btn btn-secondary " (click)="c(farmer)">Xác nhận</button>
-                        <button type="button" *ngIf ="!farmer.haveAccount" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
+                        <button type="button" *ngIf ="!farmer.haveAccount&&isDisabled" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
                     </div>
                     
                 </div>

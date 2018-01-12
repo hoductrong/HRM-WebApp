@@ -4,6 +4,7 @@ import { HttpClientModule, HttpClient,HTTP_INTERCEPTORS  } from '@angular/common
 import { AccountInfoRoutingModule } from './account-info-routing.module';
 import { AccountInfoComponent } from './account-info.component';
 import { FormsModule } from '@angular/forms';
+import { AccountService } from '../../shared/services'
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     HttpClientModule
   ],
-  declarations: [AccountInfoComponent]
+  declarations: [AccountInfoComponent],
+  providers : [AccountService]
 })
 export class AccountInfoModule { }
