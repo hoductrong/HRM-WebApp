@@ -27,6 +27,7 @@ namespace QuanLyNongTrai.Service
             if (!result.Succeeded)
                 return result;
             _repository.Add(entity);
+            _unitOfWork.SaveChanges();
             return result;
         }
 
@@ -36,6 +37,7 @@ namespace QuanLyNongTrai.Service
                 throw new ArgumentException();
             entity.IsDelete = true;
             _repository.Update(entity);
+            _unitOfWork.SaveChanges();
             return new ChangeDataResult();
         }
 
@@ -70,6 +72,7 @@ namespace QuanLyNongTrai.Service
             if (!result.Succeeded)
                 return result;
             _repository.Update(entity);
+            _unitOfWork.SaveChanges();
             return result;
         }
 
