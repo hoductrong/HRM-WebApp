@@ -94,16 +94,20 @@ export class AccountService {
   }
 
   getCurrentUserName(){
+    if(this.tkService.checkToken()){
     let curAccount;
     curAccount = this.decodeToken();
     return curAccount['sub'];
+    }
     
   }
 
   decodeToken(){
+    if(this.tkService.checkToken()){
       let tk = this.tkService.getTokenLocal();
       let infString = tk.slice(tk.indexOf('.')+1,tk.lastIndexOf('.'));
       return JSON.parse(this.b64DecodeUnicode(infString));
+    }
       
   }
 
