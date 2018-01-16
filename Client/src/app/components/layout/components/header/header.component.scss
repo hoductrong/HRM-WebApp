@@ -36,3 +36,20 @@ $topnav-background-color: #222;
         }
     }
 }
+.custom-nav{
+  display: flex;
+  flex-direction: column; // cannot use `inherit` to get the `.navbar`s value
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.dropdown.show .dropdown-menu{
+    display: block;
+    left: auto;
+    right: 0;
+   
+}
+.nav-item-custom{
+    color: #999;
+    
+}

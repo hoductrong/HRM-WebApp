@@ -115,7 +115,6 @@ export class FarmerComponent implements OnInit {
           data => {
             this.zone.run(() => {
                 this.frmrCollection = this.deleteInArray(this.frmrCollection,frmr);
-                console.log(this.deleteInArray(this.frmrCollection,data));
                 });
             
           },

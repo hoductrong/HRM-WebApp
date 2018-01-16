@@ -96,7 +96,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" *ngIf ="!isDisabled" class="btn btn-secondary " (click)="c(emp)">Xác nhận</button>
-                        <button type="button" *ngIf ="!emp.haveAccount" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
+                        <button type="button" *ngIf ="!emp.haveAccount&&isDisabled" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
                     </div>
                 </div>
             </ng-template>
