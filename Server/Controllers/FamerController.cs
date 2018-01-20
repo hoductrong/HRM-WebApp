@@ -137,7 +137,7 @@ namespace QuanLyNongTrai
         /// </summary>
         /// <param name="famerId"></param>
         /// <returns>List role name</returns>
-        [Route("{employeeId}/account")]
+        [Route("{famerId}/account")]
         [HttpGet]
         [Authorize(Roles="humanresouces")]
         public object GetRoles(Guid famerId){
