@@ -4,7 +4,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EmployeeRoutingModule } from './employee-routing.module';
 import { HttpClientModule, HttpClient,HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { EmployeeComponent } from './employee.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { TokenService,HttpInterceptorService,AccountService,MessageService,EmployeeService } from '../../shared/services';
@@ -15,6 +15,7 @@ import { TokenService,HttpInterceptorService,AccountService,MessageService,Emplo
     NgbModule.forRoot(),
     EmployeeRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     NgxPaginationModule,
     FilterPipeModule

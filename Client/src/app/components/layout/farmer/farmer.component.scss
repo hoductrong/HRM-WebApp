@@ -11,9 +11,13 @@
 }
 .disabled:disabled{
     border: none;
+    color: #999;
     background: transparent;
 }
 .disabled:focus{
     border: none;
     border-bottom: 1px solid rgba(32, 30, 30, 0.5);
+}
+.error-msg{
+    color: red;
 }

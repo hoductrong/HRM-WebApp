@@ -3,6 +3,7 @@ import { routerTransition } from '../../../router.animations';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Employee, AccountCreate } from '../../shared/services/class';
 import { EmployeeService, AccountService } from '../../shared/services';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
 
@@ -12,6 +13,7 @@ import { EmployeeService, AccountService } from '../../shared/services';
   styleUrls: ['./employee.component.scss'],
 })
 export class EmployeeComponent implements OnInit {
+    inputsForm : FormGroup;
     accountName = "";
     isDisabled = false;
     p : Number = 1;
@@ -33,13 +35,13 @@ export class EmployeeComponent implements OnInit {
       private modalService: NgbModal, 
       private empService : EmployeeService,
       private accService : AccountService,
-      private zone : NgZone
+      private zone : NgZone,
+      private fb:FormBuilder
     ) { }
      
   open(content) {
     this.isDisabled = false;
     this.emp = new Employee();
-      this.emp.haveAccount = true;
     this.modalService.open(content)
       .result
       .then((result) => {
@@ -54,7 +56,6 @@ export class EmployeeComponent implements OnInit {
 
   openEditMenu(emp : Employee,content){
     this.emp = emp;
-    this.emp.haveAccount = true;
     this.time1['year'] = parseInt(emp.birthDay.substr(0,4));
     this.time1['month'] = parseInt(emp.birthDay.substr(5,2));
     this.time1['day'] = parseInt(emp.birthDay.substr(8,2));
@@ -67,8 +68,58 @@ export class EmployeeComponent implements OnInit {
     });
 }
 
-  ngOnInit() {
+  ngOnInit(){
     this.getAllEmployees();
+    this.inputsForm=this.fb.group({
+
+        phone: [this.emp.phone,[Validators.required,this.checkPhoneNum]],
+        phone_disabled: [{value : this.emp.phone, disabled : true}],
+        fullname:[],
+        fullname_disabled:[{value : this.emp.phone, disabled : true}],
+        address:[],
+        address_disabled:[{value : this.emp.phone, disabled: true}],
+        salary:[this.emp.salary,[Validators.required,this.checkSalary]],
+        salary_disabled: [{value: this.emp.salary, disabled : true}],
+        sex:[],
+        sex_disabled:[{value: this.emp.sex, disabled: true}],
+        birthday:[this.emp.birthDay,[Validators.required,this.checkbirthday]],
+        startworktime:[this.emp.startWorkTime,[Validators.required,this.checkstartworktime]],
+        accountname:[],
+
+        });
+
+      
+  }
+
+  
+  checkPhoneNum(control:FormControl){
+    if(!isNaN(control.value)){
+      return{validphone:false};
+    }
+    return {validphone:true};
+  }
+  
+  
+
+  checkSalary(control:FormControl){
+    if(!isNaN(control.value)){
+      return{validsalary:false};
+    }
+    return {validsalary:true};
+  }
+
+  checkbirthday(control:FormControl){
+    if(control.value instanceof Object){
+      return{validbirthday:false};
+    }
+    return {validbirthday:true};
+  }
+
+  checkstartworktime(control:FormControl){
+    if(control.value instanceof Object){
+      return{validstartworktime:false};
+    }
+    return {validstartworktime:true};
   }
 
   getAllEmployees(){
@@ -149,6 +200,8 @@ export class EmployeeComponent implements OnInit {
             result => {
                 this.addRole(result);
                 window.alert(`Tên tài khoản: ${result.userName} . Mật khẩu: ${result.password}`);
+                this.emp.haveAccount = true;
+                this.accountName = '';
             },
             error =>{
                 window.alert(error);

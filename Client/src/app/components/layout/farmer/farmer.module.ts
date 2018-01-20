@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule, HttpClient,HTTP_INTERCEPTORS  } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { TokenService, FarmerService, HttpInterceptorService,AccountService,MessageService } from '../../shared/services';
@@ -14,6 +14,7 @@ import { FarmerComponent } from './farmer.component';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     NgbModule.forRoot(),
     FarmerRoutingModule,
     HttpClientModule,

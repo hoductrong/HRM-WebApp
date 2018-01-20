@@ -3,6 +3,8 @@ import { routerTransition } from '../../../router.animations';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Farmer, AccountCreate, UserResetPassword } from '../../shared/services/class';
 import { FarmerService,AccountService } from '../../shared/services';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-farmer',
   templateUrl: './farmer.component.html',
@@ -10,6 +12,8 @@ import { FarmerService,AccountService } from '../../shared/services';
   styleUrls: ['./farmer.component.scss']
 })
 export class FarmerComponent implements OnInit {
+    isFormValid = false;
+    inputsForm : FormGroup;
     accountName = "";
     isDisabled = false;
     p : Number = 1;
@@ -25,8 +29,12 @@ export class FarmerComponent implements OnInit {
       private modalService: NgbModal,
       private frmrService : FarmerService,
       private accService : AccountService,
-      private zone : NgZone
-    ) { }
+      private zone : NgZone,
+      private fb:FormBuilder,
+      
+    ) { 
+        
+    }
 
   open(content) {
       this.isDisabled = false;
@@ -57,6 +65,36 @@ export class FarmerComponent implements OnInit {
 
   ngOnInit() {
     this.getAllFarmers();
+    this.inputsForm=this.fb.group({
+
+        phone: [this.farmer.phone,[Validators.required,this.checkPhoneNum]],
+        phone_disabled: [{value: this.farmer.phone, disabled: true}],
+        fullname:[],
+        fullname_disabled:[{value : this.farmer.fullName, disabled : true}],
+        address:[],
+        address_disabled:[{value : this.farmer.address, disabled : true}],
+        sex:[],
+        sex_disabled:[{value : this.farmer.sex, disabled : true}],
+        birthday:[this.time1,[Validators.required,this.checkbirthday]],
+        accountname:[],
+        
+        });
+  }
+
+  checkPhoneNum(control:FormControl){
+    if(!isNaN(control.value)){
+      return{validphone:false};
+    }
+    return {validphone:true};
+  }
+
+  
+
+  checkbirthday(control:FormControl){
+    if(control.value instanceof Object){
+      return{validbirthday:false};
+    }
+    return {validbirthday:true};
   }
 
   getAllFarmers(){
@@ -143,6 +181,8 @@ export class FarmerComponent implements OnInit {
             result => {
                 this.addRole(result);
                 window.alert(`Tên tài khoản: ${result.userName} . Mật khẩu: ${result.password}`);
+                this.farmer.haveAccount = true;
+                this.accountName = '';
             },
             error =>{
                 window.alert(error);

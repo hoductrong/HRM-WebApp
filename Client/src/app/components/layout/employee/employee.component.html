@@ -12,146 +12,208 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Họ và Tên</p>
+                <form [formGroup]="inputsForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Họ và Tên</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <input type="text" *ngIf = "!isDisabled" formControlName="fullname" [(ngModel)]="emp.fullName" class="form-control disabled"
+                                    id="fullname">
+                                <input type="text" *ngIf = "isDisabled" formControlName="fullname_disabled" [(ngModel)]="emp.fullName" class="form-control disabled"
+                                    id="fullname">
+                            </div>
                         </div>
-                        <div class="col-xl-6">
-                            <input type="text" [disabled]="isDisabled" [(ngModel)]="emp.fullName" class="form-control disabled" id="fullname">
+                        
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Địa chỉ</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <input type="text" *ngIf = "!isDisabled"  formControlName="address" [(ngModel)]="emp.address" class="form-control disabled"
+                                    id="address">
+                                <input type="text" *ngIf = "isDisabled" formControlName="address_disabled" [(ngModel)]="emp.address" class="form-control disabled"
+                                    id="address">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Địa chỉ</p>
-                        </div>
-                        <div class="col-xl-6">
-                            <input type="text" [disabled]="isDisabled" [(ngModel)]="emp.address" class="form-control disabled" id="address">
-                        </div>
-                    </div>
-                    <div class="row">
+                        <div class="row">
                             <div class="col-xl-6">
                                 <p>Lương</p>
                             </div>
                             <div class="col-xl-6">
-                                <input type="text" [disabled]="isDisabled" [(ngModel)]="emp.salary" class="form-control disabled" id="salary">
-                            </div>
-                        </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Giới tính</p>
-                        </div>
-                        <div class="col-xl-6">
-                            <select [disabled]="isDisabled" [(ngModel)]="emp.sex" class="custom-select disabled">
-                                <option value="1">Nam</option>
-                                <option value="0">Nữ</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Ngày sinh</p>
-                        </div>
-                        <div class="col-xl-6">
-
-                            <div class="input-group ">
-                                <input class="form-control disabled" placeholder="yyyy-mm-dd" name="dp" [disabled]="isDisabled" [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker">
-                                <button class="input-group-addon disabled" (click)="e.toggle()" [disabled]="isDisabled" type="button">
-                                    <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
-                                </button>
+                                <input type="text" *ngIf = "!isDisabled" formControlName="salary"  [(ngModel)]="emp.salary" class="form-control disabled"
+                                    id="salary">
+                                <input type="text" *ngIf = "isDisabled" formControlName="salary_disabled" [(ngModel)]="emp.salary" class="form-control disabled"
+                                    id="salary">
                             </div>
 
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Số điện thoại</p>
+                        <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.salary.errors.required &&
+                                                inputsForm.controls.salary.dirty">
+                                    Không được để trống</p>
+                                <p class="error-msg" *ngIf=" inputsForm.controls.salary.dirty && inputsForm.get('salary').errors.validsalary"> Chỉ bao gồm số</p>
+                            </div>
                         </div>
-                        <div class="col-xl-6">
-                            <input type="text" [disabled]="isDisabled" [(ngModel)]="emp.phone" class="form-control disabled" id="phonenumber">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Giới tính</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <select *ngIf = "!isDisabled" formControlName="sex" [(ngModel)]="emp.sex" class="custom-select disabled">
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </select>
+                                <select *ngIf = "isDisabled" formControlName="sex_disabled" [(ngModel)]="emp.sex" class="custom-select disabled">
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Ngày làm việc</p>
-                        </div>
-                        <div class="col-xl-6">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Ngày sinh</p>
+                            </div>
+                            <div class="col-xl-6">
 
-                            <div class="input-group ">
-                                <input class="form-control disabled" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time2" [disabled]="isDisabled" ngbDatepicker #f="ngbDatepicker">
-                                <button class="input-group-addon disabled" (click)="f.toggle()" type="button" [disabled]="isDisabled">
-                                    <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
-                                </button>
+                                <div class="input-group ">
+                                    <input class="form-control disabled" [disabled]="isDisabled" formControlName="birthday" placeholder="yyyy-mm-dd" name="dp" 
+                                        [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker">
+                                    <button class="input-group-addon disabled" (click)="e.toggle()"  type="button">
+                                        <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
+                                    </button>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.birthday.errors.required &&
+                                        inputsForm.controls.birthday.dirty">
+                                    Không được để trống</p>
+                                <p class="error-msg" *ngIf=" inputsForm.controls.birthday.dirty && inputsForm.get('birthday').errors.validbirthday"> Sai định dạng</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Số điện thoại</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <input type="text" *ngIf = "!isDisabled" formControlName="phone"  [(ngModel)]="emp.phone" class="form-control disabled"
+                                    id="phonenumber">
+                                <input type="text" *ngIf = "isDisabled" formControlName="phone_disabled"  [(ngModel)]="emp.phone" class="form-control disabled"
+                                    id="phonenumber1">
                             </div>
 
                         </div>
-                    </div>
-                    <div class="row" *ngIf="!emp.haveAccount&&isDisabled">
-                        <div class="col-xl-6">
-                            <p>Tên tài khoản</p>
+                        <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.phone.errors.required &&
+                                                inputsForm.controls.phone.dirty">
+                                    Không được để trống</p>
+                                <p class="error-msg" *ngIf=" inputsForm.controls.phone.dirty && inputsForm.get('phone').errors.validphone"> Chỉ bao gồm số</p>
+                            </div>
                         </div>
-                        <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="accountName" class="form-control disabled" id="phonenumber" [disabled]="emp.haveAccount">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Ngày làm việc</p>
+                            </div>
+                            <div class="col-xl-6">
+
+                                <div class="input-group ">
+                                    <input class="form-control disabled" formControlName="startworktime" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time2"
+                                        [disabled]="isDisabled" ngbDatepicker #f="ngbDatepicker">
+                                    <button class="input-group-addon disabled" (click)="f.toggle()" type="button">
+                                        <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.startworktime.errors.required &&
+                                                                        inputsForm.controls.startworktime.dirty">
+                                    Không được để trống</p>
+                                <p class="error-msg" *ngIf=" inputsForm.controls.startworktime.dirty && inputsForm.get('startworktime').errors.validstartworktime">
+                                Sai định dạng</p>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="!emp.haveAccount&&isDisabled">
+                            <div class="col-xl-6">
+                                <p>Tên tài khoản</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <input type="text" *ngIf = "!emp.haveAccount&&isDisabled" formControlName="accountname" [(ngModel)]="accountName" class="form-control disabled" id="phonenumber">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" *ngIf="!isDisabled" class="btn btn-secondary " (click)="c(emp)">Xác nhận</button>
+                            <button type="button" *ngIf="!emp.haveAccount&&isDisabled" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" *ngIf ="!isDisabled" class="btn btn-secondary " (click)="c(emp)">Xác nhận</button>
-                        <button type="button" *ngIf ="!emp.haveAccount&&isDisabled" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
-                    </div>
-                </div>
+                </form>
             </ng-template>
-            </div>
-            <div class="col-xl-4"></div>
-            <div class="col-xl-6">
-                <div class="input-group">
-                    <input type="text" class="form-control" [(ngModel)]="filter.fullName" placeholder="Tìm kiếm tên nhân viên..." aria-label="Tìm kiếm tên nhân viên...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="button">Tìm kiếm!</button>
-                    </span>
-                </div>
+        </div>
+        <div class="col-xl-4"></div>
+        <div class="col-xl-6">
+            <div class="input-group">
+                <input type="text" class="form-control" [(ngModel)]="filter.fullName" placeholder="Tìm kiếm tên nhân viên..." aria-label="Tìm kiếm tên nhân viên...">
+                <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="button">Tìm kiếm!</button>
+                </span>
             </div>
         </div>
-        <hr>
-        <div class="card mb-3">
-            <div class="card-header">Bảng nhân viên</div>
-            <div class="card-body table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Họ Tên</th>
-                            <th>Giới tính</th>
-                            <th>Ngày vào làm</th>
-                            <th>Số điện thoại</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let employee of empCollection | filterBy: filter | 
+    </div>
+    <hr>
+    <div class="card mb-3">
+        <div class="card-header">Bảng nhân viên</div>
+        <div class="card-body table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Họ Tên</th>
+                        <th>Giới tính</th>
+                        <th>Số điện thoại</th>
+                        <th>Địa chỉ</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let employee of empCollection | filterBy: filter | 
                         paginate: { itemsPerPage: 5,
                         currentPage: p}">
-                            <td class="click" (click)='watchEmployee(employee,content)'>{{employee.fullName}}</td>
-                            <td>{{isSex(employee.sex)}}</td>
-                            <td>{{employee.phone}}</td>
-                            <td>{{employee.salary}}</td>
-                            <td>
-                                <a href="javascript:void(0)" (click)='deleteEmpoyee(employee)'>Xóa</a>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)" (click)='openEditMenu(employee,content)'>Sửa</a>
-                            </td>
-                        </tr>
-                        
+                        <td class="click" (click)='watchEmployee(employee,content)'>{{employee.fullName}}</td>
+                        <td>{{isSex(employee.sex)}}</td>
+                        <td>{{employee.phone}}</td>
+                        <td>{{employee.address}}</td>
+                        <td>
+                            <a href="javascript:void(0)" (click)='deleteEmpoyee(employee)'>Xóa</a>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" (click)='openEditMenu(employee,content)'>Sửa</a>
+                        </td>
+                    </tr>
 
-                    </tbody>
-                </table>
-            </div>
-            
+
+                </tbody>
+            </table>
         </div>
-        <div class="row ">
-            <div class="col-xl-12 text-center">
-                    <pagination-controls (pageChange)="p = $event" previousLabel="Trước" nextLabel="Sau" ></pagination-controls>
-            </div>
-        </div>
-        
+
     </div>
+    <div class="row ">
+        <div class="col-xl-12 text-center">
+            <pagination-controls (pageChange)="p = $event" previousLabel="Trước" nextLabel="Sau"></pagination-controls>
+        </div>
+    </div>
+
+</div>

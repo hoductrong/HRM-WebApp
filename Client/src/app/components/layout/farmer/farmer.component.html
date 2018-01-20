@@ -7,78 +7,109 @@
             <button type="button" class="btn btn-secondary btn-block" (click)="open(content)">Thêm </button>
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title" >Nông dân</h4>
+                    <h4 class="modal-title">Nông dân</h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Họ và Tên</p>
+                <form [formGroup]="inputsForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Họ và Tên</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <input type="text" *ngIf = "!isDisabled" formControlName="fullname" [(ngModel)]="farmer.fullName" class="form-control disabled" id="fullname">
+                                <input type="text" *ngIf = "isDisabled" formControlName="fullname_disabled" [(ngModel)]="farmer.fullName" class="form-control disabled" id="fullname" >
+                            </div>
                         </div>
-                        <div class="col-xl-6">
-                            <input type="text"  [(ngModel)]="farmer.fullName" class="form-control disabled" id="fullname" [disabled]="isDisabled">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Địa chỉ</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <input type="text" *ngIf = "!isDisabled" formControlName="address" [(ngModel)]="farmer.address" class="form-control disabled" id="address">
+                                <input type="text" *ngIf = "isDisabled" formControlName="address_disabled" [(ngModel)]="farmer.address" class="form-control disabled" id="address">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Địa chỉ</p>
-                        </div>
-                        <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="farmer.address" class="form-control disabled" id="address" [disabled]="isDisabled">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Giới tính</p>
-                        </div>
-                        <div class="col-xl-6">
-                    
-                            <select [(ngModel)]="farmer.sex" class="custom-select disabled" [disabled]="isDisabled">
-                                <option value="1">Nam</option>
-                                <option value="0">Nữ</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Ngày sinh</p>
-                        </div>
-                        <div class="col-xl-6">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Giới tính</p>
+                            </div>
+                            <div class="col-xl-6">
 
-                            <div class="input-group ">
-                                <input class="form-control disabled" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time1" ngbDatepicker #e="ngbDatepicker" [disabled]="isDisabled">
-                                <button class="input-group-addon disabled" [disabled]="isDisabled" (click)="e.toggle()" type="button">
-                                    <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
-                                </button>
+                                <select [(ngModel)]="farmer.sex" *ngIf = "!isDisabled" formControlName="sex" class="custom-select disabled" >
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </select>
+                                <select [(ngModel)]="farmer.sex" *ngIf = "isDisabled" formControlName="sex_disabled" class="custom-select disabled" >
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Ngày sinh</p>
+                            </div>
+                            <div class="col-xl-6">
+
+                                <div class="input-group ">
+                                    <input class="form-control disabled" [disabled]="isDisabled" formControlName="birthday" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="time1" ngbDatepicker
+                                        #e="ngbDatepicker" >
+                                    <button class="input-group-addon disabled" [disabled]="isDisabled" (click)="e.toggle()" type="button">
+                                        <img src="assets/images/calendar-icon.svg" style="width: 0.9rem; height: 0.7rem; cursor: pointer;" />
+                                    </button>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.birthday.errors.required &&
+                                        inputsForm.controls.birthday.dirty">
+                                    Không được để trống</p>
+                                <p class="error-msg" *ngIf=" inputsForm.controls.birthday.dirty && inputsForm.get('birthday').errors.validbirthday"> Sai định dạng</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p>Số điện thoại</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <input type="text" *ngIf = "!isDisabled" formControlName="phone" [(ngModel)]="farmer.phone" class="form-control disabled" id="phonenumber">
+                                <input type="text" *ngIf = "isDisabled" formControlName="phone_disabled" [(ngModel)]="farmer.phone" class="form-control disabled" id="phonenumber">
                             </div>
 
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <p>Số điện thoại</p>
+                        <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.phone.errors.required &&
+                            inputsForm.controls.phone.dirty">
+                                    Không được để trống</p>
+                                <p class="error-msg" *ngIf=" inputsForm.controls.phone.dirty && inputsForm.get('phone').errors.validphone"> Chỉ bao gồm số</p>
+                            </div>
                         </div>
-                        <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="farmer.phone" class="form-control disabled" id="phonenumber" [disabled]="isDisabled">
+                        <div class="row" *ngIf="!farmer.haveAccount&&isDisabled">
+                            <div class="col-xl-6">
+                                <p>Tên tài khoản</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <input type="text" formControlName="accountname" [(ngModel)]="accountName" class="form-control disabled" id="phonenumber">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row" *ngIf="!farmer.haveAccount&&isDisabled">
-                        <div class="col-xl-6">
-                            <p>Tên tài khoản</p>
+
+                        <div class="modal-footer">
+                            <button type="submit" *ngIf="!isDisabled" class="btn btn-secondary " (click)="c(farmer)">Xác nhận</button>
+                            <button type="button" *ngIf="!farmer.haveAccount&&isDisabled" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
                         </div>
-                        <div class="col-xl-6">
-                            <input type="text" [(ngModel)]="accountName" class="form-control disabled" id="phonenumber" [disabled]="farmer.haveAccount">
-                        </div>
+
                     </div>
-                    
-                    <div class="modal-footer">
-                        <button type="button" *ngIf ="!isDisabled" class="btn btn-secondary " (click)="c(farmer)">Xác nhận</button>
-                        <button type="button" *ngIf ="!farmer.haveAccount&&isDisabled" class="btn btn-secondary " (click)="c()">Tạo tài khoản</button>
-                    </div>
-                    
-                </div>
+                </form>
             </ng-template>
         </div>
         <div class="col-xl-4"></div>
@@ -110,18 +141,18 @@
                     <tr *ngFor="let farmer of frmrCollection | filterBy: filter | 
                         paginate: { itemsPerPage: 5,
                         currentPage: p}">
-                            <td class="click" (click)='watchFarmer(farmer,content)'>{{farmer.fullName}}</td>
-                            <td>{{isSex(farmer.sex)}}</td>
-                            <td>{{farmer.address}}</td>
-                            <td>{{farmer.phone}}</td>
-                            <td>
-                                <a href="javascript:void(0)" (click)='deleteFarmer(farmer)'>Xóa</a>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)" (click)='openEditMenu(farmer,content)'>Sửa</a>
-                            </td>
-                        </tr>
-                    
+                        <td class="click" (click)='watchFarmer(farmer,content)'>{{farmer.fullName}}</td>
+                        <td>{{isSex(farmer.sex)}}</td>
+                        <td>{{farmer.address}}</td>
+                        <td>{{farmer.phone}}</td>
+                        <td>
+                            <a href="javascript:void(0)" (click)='deleteFarmer(farmer)'>Xóa</a>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" (click)='openEditMenu(farmer,content)'>Sửa</a>
+                        </td>
+                    </tr>
+
 
                 </tbody>
             </table>
@@ -129,7 +160,7 @@
     </div>
     <div class="row ">
         <div class="col-xl-12 text-center">
-                <pagination-controls (pageChange)="p = $event" previousLabel="Trước" nextLabel="Sau" ></pagination-controls>
+            <pagination-controls (pageChange)="p = $event" previousLabel="Trước" nextLabel="Sau"></pagination-controls>
         </div>
     </div>
 </div>

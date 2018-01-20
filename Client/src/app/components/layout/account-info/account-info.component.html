@@ -2,33 +2,30 @@
   <h2 class="text-muted">Thông tin tài khoản</h2>
   
   <hr>
-      <div class="row " >
-          <div class="col-xl-2">
-            <label for="username">Tên tài khoản</label>
-          </div>
+  <div class="card-body table-responsive">
+    <table class="table borderless">
+        <tbody>
+           <tr>
+                <td>Tên tài khoản</td>
+                <td>{{accService.getCurrentUserName()}}</td>
+            </tr>
+            <tr>
+                <td>Tên đầy đủ</td>
+                <td>{{accService.getCurrentUserFullName()}}</td>
+            </tr>
+            <tr>
+                <td>Chức vụ</td>
+                <td>{{accService.getCurrentUserRole()}}</td>
+            </tr>
 
-          <div class="col-xl-3">
-            <label for="username">{{accService.getCurrentUserName()}}</label>
-          </div>
-          <div class="col-xl-7"></div>  
-      </div>
-          
-          
-      <div class="row " >
-        <div class="col-xl-2">
-          <label for="password">Tên đầy đủ</label>
-          </div>
-          <div class="col-xl-3">
-          <label for="username">{{accService.getCurrentUserFullName()}}</label>
-          </div>
-          <div class="col-xl-7"></div>
-      </div>
+        </tbody>
+    </table>
+</div>
       <div class="row">
-        <div class="col-xl-2">
+        <div class="col-sm-2">
           <button class="btn btn-primary">Chỉnh sửa</button>
           </div>
-          <div class="col-xl-10"></div>
-          
+          <div class="col-sm-10"></div>
       </div>
   <hr />   
 </div>

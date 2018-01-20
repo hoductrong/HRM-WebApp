@@ -81,15 +81,19 @@ export class AccountService {
 
   getCurrentUserFullName(){
     let curAccount;
+    if(this.tkService.checkToken()){
     curAccount = this.decodeToken();
     return curAccount['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+    }
     
   }
 
   getCurrentUserRole(){
     let curAccount;
+    if(this.tkService.checkToken()){
     curAccount = this.decodeToken();
     return curAccount['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    }
     
   }
 
