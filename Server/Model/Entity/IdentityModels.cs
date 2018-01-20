@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using QuanLyNongTrai.UI.Entity;
 
 namespace QuanLyNongTrai.Model.Entity
 {
@@ -45,6 +47,17 @@ namespace QuanLyNongTrai.Model.Entity
         public ApplicationUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher, IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<ApplicationUser>> logger) : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
         }
+
+        /// <summary>
+        /// Get user by PersonalId
+        /// </summary>
+        /// <param name="personalId"></param>
+        /// <returns></returns>
+        public AccountModel GetAccountByPersonalId(Guid personalId){
+            var user = Users.Where(u => u.PersonalId == personalId).SingleOrDefault();
+            return AccountModel.CreateModel(user);
+        }
+    
     }
 
     public class ApplicationRoleManager : RoleManager<ApplicationRole>

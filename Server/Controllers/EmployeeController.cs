@@ -15,9 +15,13 @@ namespace QuanLyNongTrai
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employeeService;
-        public EmployeeController(IEmployeeService employeeService)
+        private readonly ApplicationUserManager _userManager;
+
+        public EmployeeController(IEmployeeService employeeService,
+                ApplicationUserManager userManager)
         {
             _employeeService = employeeService;
+            _userManager = userManager;
         }
 
         [Route("")]
@@ -138,6 +142,11 @@ namespace QuanLyNongTrai
             }
         }
 
+        /// <summary>
+        /// Get an employee' information
+        /// </summary>
+        /// <param name="employeeId">Employee Id</param>
+        /// <returns></returns>
         [Route("{employeeId}")]
         [HttpGet]
         [Authorize(Roles = "manager")]
@@ -190,6 +199,24 @@ namespace QuanLyNongTrai
             }
         }
 
-        
+        /// <summary>
+        /// Get Roles of account that employee own
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns>List role name</returns>
+        [Route("{employeeId}/account")]
+        [HttpGet]
+        [Authorize(Roles="humanresouces")]
+        public object GetRoles(Guid employeeId){
+            if(employeeId == Guid.Empty)
+                return ResponseMessageModel.CreateResponse(MessageCode.PARAMETER_NULL);
+            //find personal id by employeeId
+            var employee = _employeeService.Find(employeeId);
+            if(employee == null)
+                return ResponseMessageModel.CreateResponse(MessageCode.OBJECT_NOT_FOUND);
+            //get role of account by personalId
+            var result = _userManager.GetAccountByPersonalId(employee.PersonalId);
+            return ResponseMessageModel.CreateResponse(result);
+        }
     }
 }

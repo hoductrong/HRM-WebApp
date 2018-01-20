@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QuanLyNongTrai.Model.Entity;
 using QuanLyNongTrai.Service;
 using QuanLyNongTrai.UI.Entity;
 
@@ -13,11 +14,14 @@ namespace QuanLyNongTrai
     public class FamerController : Controller
     {
         private readonly IFamerService _famerService;
+        private ApplicationUserManager _userManager;
         public FamerController(
             IFamerService famerService,
-            IPersonalService personalService)
+            IPersonalService personalService,
+            ApplicationUserManager userManager)
         {
             _famerService = famerService;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -126,6 +130,26 @@ namespace QuanLyNongTrai
             {
                 return this.Message(MessageCode.DATA_VALIDATE_ERROR);
             }
+        }
+
+        /// <summary>
+        /// Get Roles of account that famer own
+        /// </summary>
+        /// <param name="famerId"></param>
+        /// <returns>List role name</returns>
+        [Route("{employeeId}/account")]
+        [HttpGet]
+        [Authorize(Roles="humanresouces")]
+        public object GetRoles(Guid famerId){
+            if(famerId == Guid.Empty)
+                return ResponseMessageModel.CreateResponse(MessageCode.PARAMETER_NULL);
+            //find personal id by famerId
+            var employee = _famerService.Find(famerId);
+            if(employee == null)
+                return ResponseMessageModel.CreateResponse(MessageCode.OBJECT_NOT_FOUND);
+            //get role of account by personalId
+            var result = _userManager.GetAccountByPersonalId(employee.PersonalId);
+            return ResponseMessageModel.CreateResponse(result);
         }
     }
 }
