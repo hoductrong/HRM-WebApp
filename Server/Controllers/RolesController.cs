@@ -20,20 +20,31 @@ namespace QuanLyNongTrai
             _roleManager = roleManager;
         }
 
+        /// <summary>
+        /// Get role list
+        /// </summary>
+        /// <returns></returns>
         [Route("")]
         [HttpGet]
-        [Authorize(Roles = "manager")]
-        public async Task<object> GetAllRole(){
+        [Authorize(Roles = "humanresouces")]
+        public async Task<object> GetAllRole()
+        {
             ResponseMessageModel message;
-            message = new ResponseMessageModel{
+            message = new ResponseMessageModel
+            {
                 Code = MessageCode.SUCCESS,
                 Data = _roleManager.Roles.ToList()
             };
             return message;
         }
 
+        /// <summary>
+        /// Create a new role
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public async Task<object> CreateNewRole([FromBody]ApplicationRole model)
         {
             ResponseMessageModel message;
@@ -68,7 +79,7 @@ namespace QuanLyNongTrai
 
         [Route("{roleId}")]
         [HttpDelete]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public async Task<object> DeleteRole(Guid roleId)
         {
             ResponseMessageModel message;
@@ -92,7 +103,8 @@ namespace QuanLyNongTrai
             }
             //error occurs
             string errorMessage = "";
-            foreach(var error in result.Errors){
+            foreach (var error in result.Errors)
+            {
                 errorMessage += error.Description + "\r\n";
             }
             message = new ResponseMessageModel
@@ -105,8 +117,8 @@ namespace QuanLyNongTrai
 
         [Route("{roleId}")]
         [HttpPut]
-        [Authorize(Roles="manager")]
-        public async Task<object> EditRole(Guid roleId,[FromBody] ApplicationRole roleName)
+        [Authorize(Roles = "humanresouces")]
+        public async Task<object> EditRole(Guid roleId, [FromBody] ApplicationRole roleName)
         {
             ResponseMessageModel message;
             var role = await _roleManager.FindByIdAsync(roleId.ToString());

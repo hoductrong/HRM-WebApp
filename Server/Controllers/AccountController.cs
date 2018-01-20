@@ -208,7 +208,7 @@ namespace QuanLyNongTrai
 
         [Route("{userId}")]
         [HttpDelete]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public async Task<object> RemoveUser(string userId)
         {
             ResponseMessageModel message;
@@ -248,7 +248,7 @@ namespace QuanLyNongTrai
 
         [Route("{userId}/reset")]
         [HttpPut]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public async Task<object> ResetPassword(Guid userId)
         {
             ResponseMessageModel message;
@@ -397,7 +397,7 @@ namespace QuanLyNongTrai
         /// <returns></returns>
         [Route("{userId}/roles")]
         [HttpGet]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public async Task<object> GetRoles(Guid userId)
         {
             try
@@ -424,7 +424,7 @@ namespace QuanLyNongTrai
         /// <returns></returns>
         [Route("{userId}/roles")]
         [HttpPut]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public async Task<object> UpdateRoleOfUser(Guid userId, [FromBody]string[] roles)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());

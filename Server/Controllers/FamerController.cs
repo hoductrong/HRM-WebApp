@@ -30,7 +30,7 @@ namespace QuanLyNongTrai
         /// <returns>Famer information added</returns>
         [Route("")]
         [HttpPost]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public object AddFamer([FromBody]FamerModel model)
         {
             ResponseMessageModel message;
@@ -59,7 +59,7 @@ namespace QuanLyNongTrai
 
         [Route("{famerId}")]
         [HttpDelete]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public object DeleteFamer(Guid famerId)
         {
             var famer = _famerService.Find(famerId);
@@ -84,7 +84,7 @@ namespace QuanLyNongTrai
 
         [Route("")]
         [HttpGet]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public object GetAllFamer()
         {
             try
@@ -99,7 +99,7 @@ namespace QuanLyNongTrai
         }
         [Route("{famerId}")]
         [HttpPut]
-        [Authorize(Roles = "manager,famer")]
+        [Authorize(Roles = "humanresouces")]
         public object UpdateFamer(Guid famerId, [FromBody]FamerModel model)
         {
             if (ModelState.IsValid)
