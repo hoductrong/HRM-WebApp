@@ -147,6 +147,11 @@ namespace QuanLyNongTrai
             return message;
         }
 
+        /// <summary>
+        /// Generate account for personal
+        /// </summary>
+        /// <param name="userRegister"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "humanresouces")]
         public async Task<object> Register([FromBody]UserRegisterModel userRegister)
