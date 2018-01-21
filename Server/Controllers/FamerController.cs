@@ -30,7 +30,7 @@ namespace QuanLyNongTrai
         /// <returns>Famer information added</returns>
         [Route("")]
         [HttpPost]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public object AddFamer([FromBody]FamerModel model)
         {
             ResponseMessageModel message;
@@ -59,7 +59,7 @@ namespace QuanLyNongTrai
 
         [Route("{famerId}")]
         [HttpDelete]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public object DeleteFamer(Guid famerId)
         {
             var famer = _famerService.Find(famerId);
@@ -84,7 +84,7 @@ namespace QuanLyNongTrai
 
         [Route("")]
         [HttpGet]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public object GetAllFamer()
         {
             try
@@ -99,7 +99,7 @@ namespace QuanLyNongTrai
         }
         [Route("{famerId}")]
         [HttpPut]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public object UpdateFamer(Guid famerId, [FromBody]FamerModel model)
         {
             if (ModelState.IsValid)
@@ -139,7 +139,7 @@ namespace QuanLyNongTrai
         /// <returns>List role name</returns>
         [Route("{famerId}/account")]
         [HttpGet]
-        [Authorize(Roles="humanresouces")]
+        [Authorize(Roles="humanresources")]
         public object GetRoles(Guid famerId){
             if(famerId == Guid.Empty)
                 return ResponseMessageModel.CreateResponse(MessageCode.PARAMETER_NULL);

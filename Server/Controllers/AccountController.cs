@@ -153,7 +153,7 @@ namespace QuanLyNongTrai
         /// <param name="userRegister"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public async Task<object> Register([FromBody]UserRegisterModel userRegister)
         {
             ResponseMessageModel message;
@@ -213,7 +213,7 @@ namespace QuanLyNongTrai
 
         [Route("{userId}")]
         [HttpDelete]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public async Task<object> RemoveUser(string userId)
         {
             ResponseMessageModel message;
@@ -253,7 +253,7 @@ namespace QuanLyNongTrai
 
         [Route("{userId}/reset")]
         [HttpPut]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public async Task<object> ResetPassword(Guid userId)
         {
             ResponseMessageModel message;
@@ -402,7 +402,7 @@ namespace QuanLyNongTrai
         /// <returns></returns>
         [Route("{userId}/roles")]
         [HttpGet]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public async Task<object> GetRoles(Guid userId)
         {
             try
@@ -429,7 +429,7 @@ namespace QuanLyNongTrai
         /// <returns></returns>
         [Route("{userId}/roles")]
         [HttpPut]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public async Task<object> UpdateRoleOfUser(Guid userId, [FromBody]string[] roles)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());

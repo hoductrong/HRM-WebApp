@@ -26,7 +26,7 @@ namespace QuanLyNongTrai
 
         [Route("")]
         [HttpPost]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public object Add([FromBody]EmployeeModel model)
         {
             ResponseMessageModel message;
@@ -81,7 +81,7 @@ namespace QuanLyNongTrai
 
         [Route("")]
         [HttpGet]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public object GetAllEmployee()
         {
             ResponseMessageModel message;
@@ -107,7 +107,7 @@ namespace QuanLyNongTrai
 
         [Route("{employeeId}")]
         [HttpDelete]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public object Delete(Guid employeeId)
         {
             ResponseMessageModel message;
@@ -149,7 +149,7 @@ namespace QuanLyNongTrai
         /// <returns></returns>
         [Route("{employeeId}")]
         [HttpGet]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public object GetEmployee(Guid employeeId)
         {
             ResponseMessageModel message;
@@ -174,7 +174,7 @@ namespace QuanLyNongTrai
         /// <returns>employee information is updated</returns>
         [Route("{employeeId}")]
         [HttpPut]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public object EditEmployee(Guid employeeId,[FromBody] EmployeeModel model)
         {
             if (ModelState.IsValid)
@@ -206,7 +206,7 @@ namespace QuanLyNongTrai
         /// <returns>List role name</returns>
         [Route("{employeeId}/account")]
         [HttpGet]
-        [Authorize(Roles="humanresouces")]
+        [Authorize(Roles="humanresources")]
         public object GetRoles(Guid employeeId){
             if(employeeId == Guid.Empty)
                 return ResponseMessageModel.CreateResponse(MessageCode.PARAMETER_NULL);

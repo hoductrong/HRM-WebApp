@@ -26,7 +26,7 @@ namespace QuanLyNongTrai
         /// <returns></returns>
         [Route("")]
         [HttpGet]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public async Task<object> GetAllRole()
         {
             ResponseMessageModel message;
@@ -44,7 +44,7 @@ namespace QuanLyNongTrai
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public async Task<object> CreateNewRole([FromBody]ApplicationRole model)
         {
             ResponseMessageModel message;
@@ -79,7 +79,7 @@ namespace QuanLyNongTrai
 
         [Route("{roleId}")]
         [HttpDelete]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public async Task<object> DeleteRole(Guid roleId)
         {
             ResponseMessageModel message;
@@ -117,7 +117,7 @@ namespace QuanLyNongTrai
 
         [Route("{roleId}")]
         [HttpPut]
-        [Authorize(Roles = "humanresouces")]
+        [Authorize(Roles = "humanresources")]
         public async Task<object> EditRole(Guid roleId, [FromBody] ApplicationRole roleName)
         {
             ResponseMessageModel message;
