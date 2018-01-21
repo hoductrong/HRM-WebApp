@@ -148,7 +148,7 @@ namespace QuanLyNongTrai
         }
 
         [HttpPost]
-        [Authorize(Roles = "manager")]
+        [Authorize(Roles = "humanresouces")]
         public async Task<object> Register([FromBody]UserRegisterModel userRegister)
         {
             ResponseMessageModel message;
