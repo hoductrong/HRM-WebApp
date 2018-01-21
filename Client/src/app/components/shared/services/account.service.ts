@@ -117,7 +117,9 @@ export class AccountService {
 
   b64DecodeUnicode(str) {
       // Going backwards: from bytestream, to percent-encoding, to original string.
-      return decodeURIComponent(atob(str).split('').map((c) => {
+      //fix error decode base64 invalidCharater
+      var base64String = str.replace('-', '+').replace('_', '/');
+      return decodeURIComponent(atob(base64String).split('').map((c) => {
           return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
   }
