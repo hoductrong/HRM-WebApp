@@ -48,6 +48,16 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="row" *ngIf = "farmer.haveAccount&&!isDisabled">
+                            <div class="col-xl-6">
+                                <p>Chức vụ</p>
+                            </div>
+                            <div  class="col-xl-6">
+                                <label class="checkbox-inline"><input (change)="isHumanResources = !isHumanResources" type="checkbox" [checked]="isHumanResources" name="isHumanResources">Quản lý nhân sự  </label>
+                                <label class="checkbox-inline"><input (change)="isWareHouse = !isWareHouse" [checked]="isWareHouse" type="checkbox" value="warehouse">Quản lý kho  </label>
+                                <label class="checkbox-inline"><input (change)="isFarmer = !isFarmer" [checked]="isFarmer" type="checkbox" value="farmer">Nông dân</label>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-xl-6">
                                 <p>Ngày sinh</p>
@@ -88,8 +98,7 @@
                         <div class="row">
                             <div class="col-xl-6"></div>
                             <div class="col-xl-6">
-                                <p class="error-msg" *ngIf="inputsForm.controls.phone.errors.required &&
-                            inputsForm.controls.phone.dirty">
+                                <p class="error-msg" *ngIf="inputsForm.controls.phone.dirty && inputsForm.controls.phone.errors.required">
                                     Không được để trống</p>
                                 <p class="error-msg" *ngIf=" inputsForm.controls.phone.dirty && inputsForm.get('phone').errors.validphone"> Chỉ bao gồm số</p>
                             </div>

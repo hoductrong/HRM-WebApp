@@ -11,13 +11,14 @@ const routes: Routes = [
         children: [
             { path: '', redirectTo: 'dashboard' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-            { path: 'resource', loadChildren: './resource/resource.module#ResourceModule' },
-            { path: 'imexport', loadChildren: './imexport/imexport.module#ImexportModule' },
-            { path: 'land', loadChildren: './land/land.module#LandModule' },
-            { path: 'document', loadChildren: './document/document.module#DocumentModule' },
+            { path: 'resource', loadChildren: './resource/resource.module#ResourceModule', canActivate : [FarmerRoleGuard] },
+            { path: 'imexport', loadChildren: './imexport/imexport.module#ImexportModule', canActivate : [FarmerRoleGuard] },
+            { path: 'land', loadChildren: './land/land.module#LandModule', canActivate : [FarmerRoleGuard] },
+            { path: 'document', loadChildren: './document/document.module#DocumentModule', canActivate : [FarmerRoleGuard] },
             { path: 'employee', loadChildren: './employee/employee.module#EmployeeModule', canActivate : [HumanresourcesRoleGuard] },
             { path: 'farmer', loadChildren: './farmer/farmer.module#FarmerModule', canActivate : [HumanresourcesRoleGuard] },
             { path: 'account-info', loadChildren: './account-info/account-info.module#AccountInfoModule' },
+            { path: 'role-manager', loadChildren: './role-manager/role-manager.module#RoleManagerModule', canActivate : [HumanresourcesRoleGuard]  },
             
         ]
     }

@@ -1,0 +1,49 @@
+<h2 class="text-muted">Phân Quyền</h2>
+<hr>
+<div class="row">
+    <div *ngIf = '!isHide' class="col-xl-6"> 
+        <input  type="text" [(ngModel)] = 'roleName' class="form-control" id="rolename">
+    </div>
+    <div *ngIf = 'isHide' class="col-xl-2">
+        <button type="button"  (click)='isHide=!isHide' class="btn btn-secondary btn-block">Thêm Quyền </button>
+    </div>
+    <div *ngIf = '!isHide' class="col-xl-2">
+            <button type="button"  (click)='createRole(roleName);isHide=!isHide;' class="btn btn-secondary btn-block">Thêm </button>
+        </div>
+</div>
+    <hr>
+        <div class="row">
+            
+            <div class="col-xl-6">
+        <div class="card mb-3">
+            <div class="card-header">Bảng danh sách các quyền</div>
+            <div class="card-body table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Quyền</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr  *ngFor="let role of roles">
+                            <td class="click" > <input type="text" #c class="form-control disabled" [disabled]='isDisabled' id="rolename" value ='{{role.name}}'></td>
+                            <td>
+                                <a href="javascript:void(0)" *ngIf = 'isDisabled' (click)='deleteRole(role)' >Xóa</a>
+                                <a href="javascript:void(0)" *ngIf = '!isDisabled' (click)='isDisabled=!isDisabled' >Hủy</a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" *ngIf = 'isDisabled' (click)='isDisabled=!isDisabled'>Sửa</a>
+                                <a href="javascript:void(0)" *ngIf = '!isDisabled' (click)='editRole(role,c.value);isDisabled=!isDisabled'>Xong</a>
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        </div>  
+        </div>

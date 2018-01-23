@@ -12,7 +12,6 @@ import { UserChangePassword } from '../shared/services/class/user-change-passwor
   animations: [routerTransition()],
 })
 export class RePasswordComponent implements OnInit {
-  //luu thong tin mat khau cua user
   user = new UserChangePassword();
   message = '';
 

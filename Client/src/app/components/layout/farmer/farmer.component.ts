@@ -15,6 +15,9 @@ export class FarmerComponent implements OnInit {
     isFormValid = false;
     inputsForm : FormGroup;
     accountName = "";
+    isHumanResources = false;
+    isWareHouse = false;
+    isFarmer = false;
     isDisabled = false;
     p : Number = 1;
     farmer : Farmer = new Farmer();
@@ -39,12 +42,13 @@ export class FarmerComponent implements OnInit {
   open(content) {
       this.isDisabled = false;
       this.farmer = new Farmer();
-      this.farmer.haveAccount = true;
+      
       this.modalService.open(content)
       .result
       .then((result) => {
         result.birthDay = `${this.time1["month"].toString()}-${this.time1["day"].toString()}-${this.time1["year"].toString()} `;
         this.createFarmer(result);
+        this.farmer.haveAccount = true;
       }, (reason) => {
       });
   }
@@ -54,11 +58,13 @@ export class FarmerComponent implements OnInit {
       this.time1['year'] = parseInt(frmr.birthDay.substr(0,4));
       this.time1['month'] = parseInt(frmr.birthDay.substr(5,2));
       this.time1['day'] = parseInt(frmr.birthDay.substr(8,2));
+      this.getRoleFromFarmer(frmr);
       this.isDisabled = false;
       this.modalService.open(content)
       .result
       .then((result) => {
         this.editFarmer(result);
+        this.editRole(result);
       }, (reason) => {
       });
   }
@@ -145,7 +151,37 @@ export class FarmerComponent implements OnInit {
 
           )
       
-  }  
+  } 
+  
+  getRoleFromFarmer(frmr : Farmer){
+    this.frmrService.getUserId(frmr)
+    .then(
+    result => {
+      this.accService.getRoleAccount(result.userId)
+      .then(
+        (result : string[]) => {
+          this.zone.run(() => {
+                result.forEach(
+                element => {
+                if(element == 'farmer') this.isFarmer = true;
+                else this.isFarmer = false;
+                if(element == 'warehouse') this.isWareHouse = true;
+                else this.isWareHouse = false;
+                if(element == 'humanresources') this.isHumanResources = true;
+                this.isWareHouse = false;
+              }
+            )
+            });
+          
+          
+        }
+      )
+    },
+    err => {
+      window.alert(err);
+    }
+  )
+  }
 
   deleteFarmer(frmr : Farmer){
       this.frmrService.deleteFarmer(frmr)
@@ -179,7 +215,7 @@ export class FarmerComponent implements OnInit {
         this.accService.createAccount(acc)
         .then(
             result => {
-                this.addRole(result);
+                this.addRole(result.id);
                 window.alert(`Tên tài khoản: ${result.userName} . Mật khẩu: ${result.password}`);
                 this.farmer.haveAccount = true;
                 this.accountName = '';
@@ -192,6 +228,7 @@ export class FarmerComponent implements OnInit {
       }, (reason) => {
       });
 }
+
 addRole(result){
     let role : string[] = ['farmer'];
     this.accService.addRoleAccount(result,role)
@@ -203,6 +240,31 @@ addRole(result){
         }
     )
 }
+
+getRoleFromCheckBox(){
+    let role : string[] = [];
+    
+    if(this.isFarmer) role.push('farmer');
+    if(this.isHumanResources) role.push('humanresources');
+    if(this.isWareHouse) role.push('warehouse');
+  
+    return role;
+  
+  }
+  
+  editRole(frmr : Farmer){
+    if(frmr.haveAccount&&!this.isDisabled){
+    this.frmrService.getUserId(frmr)
+    .then(
+      result => {
+        this.accService.addRoleAccount(result.userId,this.getRoleFromCheckBox())
+      },
+      err => {
+        window.alert(err);
+      }
+    )
+    }
+  }
 
   isSex(num:number){
     if(num===1) return 'Nam';

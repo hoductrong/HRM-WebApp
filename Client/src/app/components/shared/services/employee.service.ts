@@ -5,6 +5,7 @@ import { MessageService } from './message.service';
 
 import { Observable } from 'rxjs/Observable';
 import { Promise } from 'q';
+import { UserId } from './class/user-id';
 
 @Injectable()
 export class EmployeeService {
@@ -26,6 +27,27 @@ export class EmployeeService {
           }
           else {
             this.msgService.add(data.errorMessage);
+            reject(data.errorMessage);
+          }
+          
+        },
+        error=>{
+          reject(error);
+        }
+      )
+    }) 
+  }
+
+  getUserId(emp : Employee):Promise<any>{
+    return Promise((resolve,reject) => {
+      this.http.get<ResponseMessage>(`${this.urlEmp}/${emp.employeeId}/account`).subscribe(
+        data=>{
+          if(data.code == "200"){
+            
+            resolve(data.data as UserId);
+            
+          }
+          else {
             reject(data.errorMessage);
           }
           

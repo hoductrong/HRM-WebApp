@@ -16,6 +16,9 @@ export class EmployeeComponent implements OnInit {
     inputsForm : FormGroup;
     accountName = "";
     isDisabled = false;
+    isHumanResources = false;
+    isWareHouse = false;
+    isFarmer = false;
     p : Number = 1;
     emp : Employee = new Employee();
   time1 : object = {
@@ -59,11 +62,14 @@ export class EmployeeComponent implements OnInit {
     this.time1['year'] = parseInt(emp.birthDay.substr(0,4));
     this.time1['month'] = parseInt(emp.birthDay.substr(5,2));
     this.time1['day'] = parseInt(emp.birthDay.substr(8,2));
+    this.getRoleFromEmployee(emp);
     this.isDisabled = false;
     this.modalService.open(content)
     .result
     .then((result) => {
       this.editEmployee(result);
+      this.editRole(result);
+      
     }, (reason) => {
     });
 }
@@ -137,6 +143,36 @@ export class EmployeeComponent implements OnInit {
     )
   }
 
+  getRoleFromEmployee(emp : Employee){
+    this.empService.getUserId(emp)
+    .then(
+    result => {
+      this.accService.getRoleAccount(result.userId)
+      .then(
+        (result : string[]) => {
+          this.zone.run(() => {
+                result.forEach(
+                element => {
+                if(element == 'farmer') this.isFarmer = true;
+                else this.isFarmer = false;
+                if(element == 'warehouse') this.isWareHouse = true;
+                else this.isWareHouse = false;
+                if(element == 'humanresources') this.isHumanResources = true;
+                this.isWareHouse = false;
+              }
+            )
+            });
+          
+          
+        }
+      )
+    },
+    err => {
+      window.alert(err);
+    }
+  )
+  }
+
   createEmployee(emp : Employee){
     this.empService.createEmployee(emp)
           .then(
@@ -160,7 +196,6 @@ export class EmployeeComponent implements OnInit {
           data => {
             this.zone.run(() => {
                 this.empCollection = this.deleteInArray(this.empCollection,emp);
-                console.log(this.deleteInArray(this.empCollection,data));
                 });
             
           },
@@ -198,7 +233,7 @@ export class EmployeeComponent implements OnInit {
         this.accService.createAccount(acc)
         .then(
             result => {
-                this.addRole(result);
+                this.addRole(result.id);
                 window.alert(`Tên tài khoản: ${result.userName} . Mật khẩu: ${result.password}`);
                 this.emp.haveAccount = true;
                 this.accountName = '';
@@ -212,9 +247,33 @@ export class EmployeeComponent implements OnInit {
       });
 }
 
-addRole(result){
-    let role : string[] = ['manager'];
-    this.accService.addRoleAccount(result,role)
+getRoleFromCheckBox(){
+  let role : string[] = [];
+  
+  if(this.isFarmer) role.push('farmer');
+  if(this.isHumanResources) role.push('humanresources');
+  if(this.isWareHouse) role.push('warehouse');
+
+  return role;
+
+}
+
+editRole(emp : Employee){
+  if(emp.haveAccount&&!this.isDisabled){
+  this.empService.getUserId(emp)
+  .then(
+    result => {
+      this.accService.addRoleAccount(result.userId,this.getRoleFromCheckBox())
+    },
+    err => {
+      window.alert(err);
+    }
+  )
+}
+}
+
+addRole(userId){
+    this.accService.addRoleAccount(userId,this.getRoleFromCheckBox())
     .then(
         result =>{
         },

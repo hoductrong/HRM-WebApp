@@ -5,6 +5,7 @@ import { MessageService } from './message.service';
 
 import { Observable } from 'rxjs/Observable';
 import { Promise } from 'q';
+import { UserId } from './class/user-id';
 
 @Injectable()
 export class FarmerService {
@@ -44,6 +45,27 @@ export class FarmerService {
           if(data.code == "200"){
             
             resolve(data.data as Farmer);
+            
+          }
+          else {
+            reject(data.errorMessage);
+          }
+          
+        },
+        error=>{
+          reject(error);
+        }
+      )
+    }) 
+  }
+
+  getUserId(frmr : Farmer):Promise<any>{
+    return Promise((resolve,reject) => {
+      this.http.get<ResponseMessage>(`${this.urlFrmr}/${frmr.famerId}/account`).subscribe(
+        data=>{
+          if(data.code == "200"){
+            
+            resolve(data.data as UserId);
             
           }
           else {

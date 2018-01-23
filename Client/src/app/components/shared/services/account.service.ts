@@ -59,13 +59,33 @@ export class AccountService {
     }) 
   }
 
-  addRoleAccount(acc : UserResetPassword,role : string[]):Promise<any>{
+  addRoleAccount(userId : string,role : string[]):Promise<any>{
     return Promise((resolve,reject) => {
-      this.http.put<ResponseMessage>(`${this.rePasswordUrl}/${acc.id}/roles`,role).subscribe(
+      this.http.put<ResponseMessage>(`${this.rePasswordUrl}/${userId}/roles`,role).subscribe(
         data=>{
           if(data.code == "200"){
             
             resolve("Success!");
+          }
+          else {
+            reject(data.errorMessage);
+          }
+          
+        },
+        error=>{
+          reject(error);
+        }
+      )
+    }) 
+  }
+
+  getRoleAccount(userId : string):Promise<any>{
+    return Promise((resolve,reject) => {
+      this.http.get<ResponseMessage>(`${this.rePasswordUrl}/${userId}/roles`).subscribe(
+        data=>{
+          if(data.code == "200"){
+            
+            resolve(data.data as string[]);
           }
           else {
             reject(data.errorMessage);
