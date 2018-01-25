@@ -54,7 +54,7 @@ namespace QuanLyNongTrai
                 .AddUserManager<ApplicationUserManager>()
                 .AddRoleManager<ApplicationRoleManager>()
                 .AddDefaultTokenProviders();
-                
+
             //========== Add Jwt Authentication ================
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services
@@ -84,16 +84,15 @@ namespace QuanLyNongTrai
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //allow cross origin
+                app.UseCors(builder =>
+                    builder.WithOrigins("http://localhost:4200"));
             }
-
-            //allow cross origin
-            app.UseCors(builder =>
-                builder.WithOrigins("http://localhost:4200"));
 
             //redirect to angular
             app.Use(async (context, next) =>

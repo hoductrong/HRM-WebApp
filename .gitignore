@@ -19,6 +19,7 @@ project.lock.json
 [Rr]elease/
 [Rr]eleases/
 x64/
+wwwroot/
 x86/
 build/
 bld/

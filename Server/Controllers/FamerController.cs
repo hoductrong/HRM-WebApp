@@ -33,27 +33,34 @@ namespace QuanLyNongTrai
         [Authorize(Roles = "humanresources")]
         public object AddFamer([FromBody]FamerModel model)
         {
-            ResponseMessageModel message;
-            //change model to Famer object
-            var famer = model.CreateEntity();
-            if (famer == null)
+            if (ModelState.IsValid)
             {
-                return this.Message(MessageCode.DATA_VALIDATE_ERROR);
-            }
-            try
-            {
-                //add famer to database
-                var result = _famerService.Add(famer);
-                if (!result.Succeeded)
+                ResponseMessageModel message;
+                //change model to Famer object
+                var famer = model.CreateEntity();
+                if (famer == null)
                 {
-                    return this.Message(MessageCode.DATA_VALIDATE_ERROR,result.GetError());
+                    return this.Message(MessageCode.DATA_VALIDATE_ERROR);
                 }
-                //add success
-                return this.Message(FamerModel.GetModel(famer));
+                try
+                {
+                    //add famer to database
+                    var result = _famerService.Add(famer);
+                    if (!result.Succeeded)
+                    {
+                        return this.Message(MessageCode.DATA_VALIDATE_ERROR, result.GetError());
+                    }
+                    //add success
+                    return this.Message(FamerModel.GetModel(famer));
+                }
+                catch (SqlException ex)
+                {
+                    return this.Message(MessageCode.SQL_ACTION_ERROR, ex.Message);
+                }
             }
-            catch (SqlException ex)
+            else
             {
-                return this.Message(MessageCode.SQL_ACTION_ERROR,ex.Message);
+                return this.Message(MessageCode.DATA_VALIDATE_ERROR, this.GetError(ModelState.Values));
             }
         }
 
@@ -104,8 +111,9 @@ namespace QuanLyNongTrai
         {
             if (ModelState.IsValid)
             {
-                if(model.PersonalId == Guid.Empty){
-                    return this.Message(MessageCode.DATA_VALIDATE_ERROR,"Yêu cầu PersonalId");
+                if (model.PersonalId == Guid.Empty)
+                {
+                    return this.Message(MessageCode.DATA_VALIDATE_ERROR, "Yêu cầu PersonalId");
                 }
                 var famer = model.CreateEntity();
                 famer.Id = famerId;
@@ -116,9 +124,11 @@ namespace QuanLyNongTrai
                     if (result.Succeeded)
                     {
                         return this.Message(FamerModel.GetModel(famer));
-                    }else{
+                    }
+                    else
+                    {
                         //error
-                        return this.Message(MessageCode.DATA_VALIDATE_ERROR,result.GetError());
+                        return this.Message(MessageCode.DATA_VALIDATE_ERROR, result.GetError());
                     }
                 }
                 catch (SqlException ex)
@@ -128,7 +138,7 @@ namespace QuanLyNongTrai
             }
             else
             {
-                return this.Message(MessageCode.DATA_VALIDATE_ERROR);
+                return this.Message(MessageCode.DATA_VALIDATE_ERROR, this.GetError(ModelState.Values));
             }
         }
 
@@ -139,13 +149,14 @@ namespace QuanLyNongTrai
         /// <returns>List role name</returns>
         [Route("{famerId}/account")]
         [HttpGet]
-        [Authorize(Roles="humanresources")]
-        public object GetRoles(Guid famerId){
-            if(famerId == Guid.Empty)
+        [Authorize(Roles = "humanresources")]
+        public object GetRoles(Guid famerId)
+        {
+            if (famerId == Guid.Empty)
                 return ResponseMessageModel.CreateResponse(MessageCode.PARAMETER_NULL);
             //find personal id by famerId
             var employee = _famerService.Find(famerId);
-            if(employee == null)
+            if (employee == null)
                 return ResponseMessageModel.CreateResponse(MessageCode.OBJECT_NOT_FOUND);
             //get role of account by personalId
             var result = _userManager.GetAccountByPersonalId(employee.PersonalId);

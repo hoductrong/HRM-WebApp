@@ -30,14 +30,9 @@ namespace QuanLyNongTrai
         public object Add([FromBody]EmployeeModel model)
         {
             ResponseMessageModel message;
-            if (model == null)
+            if (!ModelState.IsValid)
             {
-                message = new ResponseMessageModel
-                {
-                    Code = MessageCode.PARAMETER_NULL,
-                    ErrorMessage = "Parameter is null"
-                };
-                return message;
+                return this.Message(MessageCode.DATA_VALIDATE_ERROR,this.GetError(ModelState.Values));
             }
 
             Employee employee = new Employee
@@ -62,19 +57,11 @@ namespace QuanLyNongTrai
                 //parse response
                 model.EmployeeId = employee.Id;
                 model.PersonalId = employee.Personal.Id;
-                return new ResponseMessageModel
-                {
-                    Code = MessageCode.SUCCESS,
-                    Data = model
-                };
+                return this.Message(model);
             }
             catch (Exception ex)
             {
-                message = new ResponseMessageModel
-                {
-                    Code = MessageCode.SQL_ACTION_ERROR,
-                    ErrorMessage = ex.Message
-                };
+                message = this.Message(MessageCode.SQL_ACTION_ERROR,ex.Message);
                 return message;
             }
         }
@@ -87,20 +74,12 @@ namespace QuanLyNongTrai
             ResponseMessageModel message;
             try
             {
-                message = new ResponseMessageModel
-                {
-                    Code = MessageCode.SUCCESS,
-                    Data = _employeeService.GetAllEmployeeDetail()
-                };
+                message = this.Message(_employeeService.GetAllEmployeeDetail());
                 return message;
             }
             catch (Exception ex)
             {
-                message = new ResponseMessageModel
-                {
-                    Code = MessageCode.APPLICATION_ERROR,
-                    ErrorMessage = ex.Message
-                };
+                message = this.Message(MessageCode.APPLICATION_ERROR,ex.Message);
                 return message;
             }
         }
@@ -115,7 +94,7 @@ namespace QuanLyNongTrai
             //entity isn't found
             if (employee == null)
             {
-                message = ResponseMessageModel.CreateResponse(MessageCode.OBJECT_NOT_FOUND);
+                message = this.Message(MessageCode.OBJECT_NOT_FOUND);
                 return message;
             }
             //Entity is Found,delete entity
@@ -124,12 +103,12 @@ namespace QuanLyNongTrai
                 var result = _employeeService.Delete(employee);
                 if (result.Succeeded)
                 {
-                    message = ResponseMessageModel.CreateResponse(null);
+                    message = this.Message(null);
                     return message;
                 }
                 else
                 {
-                    message = ResponseMessageModel.CreateResponse(
+                    message = this.Message(
                         MessageCode.DATA_VALIDATE_ERROR,
                         result.GetError());
                     return message;
@@ -137,7 +116,7 @@ namespace QuanLyNongTrai
             }
             catch (SqlException ex)
             {
-                message = ResponseMessageModel.CreateResponse(MessageCode.SQL_ACTION_ERROR, ex.Message);
+                message = this.Message(MessageCode.SQL_ACTION_ERROR, ex.Message);
                 return message;
             }
         }
@@ -157,12 +136,12 @@ namespace QuanLyNongTrai
             //entity isn't found
             if (employee == null)
             {
-                message = ResponseMessageModel.CreateResponse(MessageCode.OBJECT_NOT_FOUND);
+                message = this.Message(MessageCode.OBJECT_NOT_FOUND);
                 return message;
             }
             //found
             EmployeeModel model = EmployeeModel.GetModel(employee);
-            message = ResponseMessageModel.CreateResponse(model);
+            message = this.Message(model);
             return message;
         }
 
@@ -186,16 +165,16 @@ namespace QuanLyNongTrai
                 //update success
                 if (result.Succeeded)
                 {
-                    return ResponseMessageModel.CreateResponse(MessageCode.SUCCESS);
+                    return this.Message(MessageCode.SUCCESS);
                 }
                 //update failed
-                return ResponseMessageModel.CreateResponse(MessageCode.SQL_ACTION_ERROR, result.GetError());
+                return this.Message(MessageCode.SQL_ACTION_ERROR, result.GetError());
             }
             else
             {
                 //get and return error
                 string errors = this.GetError(ModelState.Values);
-                return ResponseMessageModel.CreateResponse(MessageCode.DATA_VALIDATE_ERROR, errors);
+                return this.Message(MessageCode.DATA_VALIDATE_ERROR, errors);
             }
         }
 
