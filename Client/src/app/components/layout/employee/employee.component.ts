@@ -80,9 +80,9 @@ export class EmployeeComponent implements OnInit {
 
         phone: [this.emp.phone,[Validators.required,this.checkPhoneNum]],
         phone_disabled: [{value : this.emp.phone, disabled : true}],
-        fullname:[],
+        fullname:[this.emp.fullName,[Validators.required,this.checkEmpty]],
         fullname_disabled:[{value : this.emp.phone, disabled : true}],
-        address:[],
+        address:[this.emp.address,[Validators.required,this.checkEmpty]],
         address_disabled:[{value : this.emp.phone, disabled: true}],
         salary:[this.emp.salary,[Validators.required,this.checkSalary]],
         salary_disabled: [{value: this.emp.salary, disabled : true}],
@@ -97,7 +97,10 @@ export class EmployeeComponent implements OnInit {
       
   }
 
-  
+  checkEmpty(control : FormControl){
+    if(control.value !== "") return {validempty : false};
+    return {validempty : true};
+  }
   checkPhoneNum(control:FormControl){
     if(!isNaN(control.value)){
       return{validphone:false};

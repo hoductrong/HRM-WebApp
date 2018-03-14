@@ -75,9 +75,9 @@ export class FarmerComponent implements OnInit {
 
         phone: [this.farmer.phone,[Validators.required,this.checkPhoneNum]],
         phone_disabled: [{value: this.farmer.phone, disabled: true}],
-        fullname:[],
+        fullname:[this.farmer.fullName,[Validators.required]],
         fullname_disabled:[{value : this.farmer.fullName, disabled : true}],
-        address:[],
+        address:[this.farmer.address,[Validators.required]],
         address_disabled:[{value : this.farmer.address, disabled : true}],
         sex:[],
         sex_disabled:[{value : this.farmer.sex, disabled : true}],

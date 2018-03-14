@@ -24,12 +24,28 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.fullname.errors.required &&
+                                        inputsForm.controls.fullname.dirty">
+                                    Không được để trống</p>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xl-6">
                                 <p>Địa chỉ</p>
                             </div>
                             <div class="col-xl-6">
                                 <input type="text" *ngIf = "!isDisabled" formControlName="address" [(ngModel)]="farmer.address" class="form-control disabled" id="address">
                                 <input type="text" *ngIf = "isDisabled" formControlName="address_disabled" [(ngModel)]="farmer.address" class="form-control disabled" id="address">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.address.errors.required &&
+                                        inputsForm.controls.address.dirty">
+                                    Không được để trống</p>
                             </div>
                         </div>
                         <div class="row">

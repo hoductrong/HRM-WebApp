@@ -22,10 +22,17 @@
                                 <input type="text" *ngIf = "!isDisabled" formControlName="fullname" [(ngModel)]="emp.fullName" class="form-control disabled"
                                     id="fullname">
                                 <input type="text" *ngIf = "isDisabled" formControlName="fullname_disabled" [(ngModel)]="emp.fullName" class="form-control disabled"
-                                    id="fullname">
+                                    id="fullname_disabled">
                             </div>
                         </div>
-                        
+                        <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.fullname.errors.dirty &&
+                                inputsForm.controls.fullname.errors.required">
+                                    Không được để trống</p>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-xl-6">
                                 <p>Địa chỉ</p>
@@ -34,7 +41,15 @@
                                 <input type="text" *ngIf = "!isDisabled"  formControlName="address" [(ngModel)]="emp.address" class="form-control disabled"
                                     id="address">
                                 <input type="text" *ngIf = "isDisabled" formControlName="address_disabled" [(ngModel)]="emp.address" class="form-control disabled"
-                                    id="address">
+                                    id="address_disabled">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6"></div>
+                            <div class="col-xl-6">
+                                <p class="error-msg" *ngIf="inputsForm.controls.address.errors.dirty &&
+                                        inputsForm.controls.address.required">
+                                    Không được để trống</p>
                             </div>
                         </div>
                         <div class="row">
